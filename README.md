@@ -1,6 +1,10 @@
 # Landlord
 
-For a landlord: one dashboard to control every house under management. Sibling app: `pwa-tenant`. Made from `pwa-template`.
+For a landlord: one dashboard to control every house under management. Sibling app: [pwa-tenant](https://github.com/Gekyzo/pwa-tenant).
+
+**App:** <https://gekyzo.github.io/pwa-landlord/>. Open it in Chrome on Android to install it.
+
+Made from `pwa-template`.
 
 An offline Android PWA. Plain HTML, CSS and ES modules: no build step and no dependencies.
 From the template it has:

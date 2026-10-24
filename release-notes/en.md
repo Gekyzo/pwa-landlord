@@ -4,8 +4,4 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
-
-## 0.1.2 - 2026-10-24
-
-- `Settings` › `Help` › `What's new` lists what changes in each version. After an update, it opens by itself once.
+- First version of Landlord. It works offline, installs on Android and has light and dark themes in English and Spanish. The tools to manage your houses come next.

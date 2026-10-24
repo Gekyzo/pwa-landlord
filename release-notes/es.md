@@ -4,8 +4,4 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
-
-## 0.1.2 - 2026-10-24
-
-- `Ajustes` › `Ayuda` › `Novedades` muestra lo que cambia en cada versión. Tras una actualización, se abre sola una vez.
+- Primera versión de Landlord. Funciona sin conexión, se instala en Android y tiene temas claro y oscuro en inglés y español. Las herramientas para gestionar tus viviendas llegan después.

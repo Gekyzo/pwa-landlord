@@ -157,6 +157,23 @@
     padding-left: var(--space-5);
   }
 
+  /* @component property
+     @scope properties
+     @summary The detail of one property: its name, then its address.
+     @part property-name     The name, as the head of the detail.
+     @part property-address  The address, in second text; hidden when empty.
+     @example <article class="pane-detail"><h2 class="property-name">Flat 2B</h2><p class="property-address">Main Street 4, Madrid</p></article> */
+  .property-name {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-h);
+    font-weight: 600;
+  }
+
+  .property-address {
+    margin: 0 0 var(--space-4);
+    color: var(--muted);
+  }
+
   /* @component about
      @scope settings
      @summary The version lines at the end of Settings.

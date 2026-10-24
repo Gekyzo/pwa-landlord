@@ -1,4 +1,4 @@
-import { moveNote } from '#notes';
+import { moveProperty } from '#properties';
 import { dropIndex, shifts } from '#reorder';
 import { HOLD_MS, EDGE, EDGE_STEP, DRAG_START, scroller, state, ui, t, apply, guardClick } from '#ui/context';
 import { rowTops, slide } from '#ui/motion';
@@ -70,7 +70,7 @@ export const endReorder = (keep) => {
   const { node, rows, from, to, frame } = reorder;
   cancelAnimationFrame(frame);
   reorder = null;
-  // The click that follows a drop must not open the note.
+  // The click that follows a drop must not open the property.
   guardClick();
   // A render in the time of the move built new rows: the order of these rows is stale.
   const moved = keep && to !== from && node.isConnected;
@@ -80,15 +80,15 @@ export const endReorder = (keep) => {
     row.style.transform = '';
   });
   if (!moved) return;
-  // The index among all the notes: the scope of a note row is the whole list.
-  const index = state.notes.findIndex((note) => note.id === rows[to].dataset.id);
-  if (apply(moveNote(state, node.dataset.id, index), { undoText: t('toast.order') })) slide(before);
+  // The index among all the properties: the scope of a property row is the whole list.
+  const index = state.properties.findIndex((property) => property.id === rows[to].dataset.id);
+  if (apply(moveProperty(state, node.dataset.id, index), { undoText: t('toast.order') })) slide(before);
 };
 
 // Lets a hold of a finger, or a vertical drag of the mouse, lift the row and move it in its scope.
 export const bindReorder = (rowNode, node, id) => {
   let pending = null;
-  // True after a hold of the finger: the click of its release must not open the note.
+  // True after a hold of the finger: the click of its release must not open the property.
   let held = false;
   const forget = () => {
     clearTimeout(pending?.timer);

@@ -1,4 +1,4 @@
-import { NOTES_KEY, emptyNotes, normalizeNotes } from '#notes';
+import { PROPERTIES_KEY, emptyProperties, normalizeProperties } from '#properties';
 import {
   loadDoc,
   saveDoc,
@@ -75,20 +75,20 @@ export let navMotion = false;
 export const textOf = ({ key, params }) => t(key, params);
 
 // Read before the doc. A stored doc, valid or not, means that the install is not new.
-const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState: hasStoredDoc(storage, NOTES_KEY) }) : false;
+const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState: hasStoredDoc(storage, PROPERTIES_KEY) }) : false;
 
-const DOC = { key: NOTES_KEY, normalize: normalizeNotes, empty: emptyNotes };
-export let state = storage ? loadDoc(storage, DOC) : emptyNotes();
+const DOC = { key: PROPERTIES_KEY, normalize: normalizeProperties, empty: emptyProperties };
+export let state = storage ? loadDoc(storage, DOC) : emptyProperties();
 
 export const ui = {
   // The section in view.
-  view: 'notes',
-  // The note whose detail is open, or null.
-  noteId: null,
+  view: 'properties',
+  // The property whose detail is open, or null.
+  propertyId: null,
   sheetOpen: false,
-  // The note that the sheet edits, or null for a new note.
+  // The property that the sheet edits, or null for a new property.
   editing: null,
-  // The note row whose side actions are open, or null.
+  // The property row whose side actions are open, or null.
   openId: null,
   // Where the last swipe left its row, so that the next render moves the row from there.
   settleFrom: null,
@@ -132,7 +132,7 @@ export const render = () => renderer();
 
 export const commit = (next) => {
   state = next;
-  const saved = storage !== null && saveDoc(storage, NOTES_KEY, state);
+  const saved = storage !== null && saveDoc(storage, PROPERTIES_KEY, state);
   render();
   return saved;
 };

@@ -31,9 +31,9 @@ export const expand = (nodes) => {
   });
 };
 
-// The top of each note row, by id.
+// The top of each property row, by id.
 export const rowTops = () =>
-  new Map([...document.querySelectorAll('#note-list .item-row[data-id]')].map((node) => [node.dataset.id, { node, top: node.getBoundingClientRect().top }]));
+  new Map([...document.querySelectorAll('#property-list .item-row[data-id]')].map((node) => [node.dataset.id, { node, top: node.getBoundingClientRect().top }]));
 
 // Moves each row from its place before a render (`before`, from `rowTops`) to its new place.
 export const slide = (before) => {

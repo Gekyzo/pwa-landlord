@@ -12,21 +12,20 @@
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
 | `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules` |
 | `src/install.js` | The install offer state machine | nothing |
-| `src/notes.js` | Pure note operations, the doc and its validation (demo) | `config` |
 | `src/properties.js` | Pure property operations, the doc and its validation | `config` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `notes`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `properties`, `storage`, `i18n`, `onboarding` |
 | `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/drag`, `ui/update`, `ui/dust` |
-| `src/ui/notes.js` | The Notes section, its rows and its sheet (demo) | `ds/sheet`, `notes`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
-| `src/ui/settings.js` | Settings, and the text of the page in its language | `notes`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
-| `src/ui/drag.js` | The hold and move of a row (optional) | `notes`, `reorder`, `ui/context`, `ui/motion` |
+| `src/ui/properties.js` | The Properties section, its rows and its sheet | `ds/sheet`, `properties`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
+| `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
+| `src/ui/drag.js` | The hold and move of a row (optional) | `properties`, `reorder`, `ui/context`, `ui/motion` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
@@ -43,7 +42,7 @@
   storage object), so that a test passes a fake.
 - **ENG-5** No module imports `src/app.js`. A view of `src/ui/` renders the screen through
   `render` of `src/ui/context.js`.
-- **ENG-6** A module of `src/` is imported by its alias, `from '#notes'`, never by a relative
+- **ENG-6** A module of `src/` is imported by its alias, `from '#properties'`, never by a relative
   path. Node resolves `#name` through `imports` of `package.json`; the browser resolves it through
   the import map of `index.html`. `tests/aliases.test.js` checks that the two agree. An alias
   `#ds/<name>` names the module `vendor/design-system/<name>.js` (DSV-1).
@@ -63,7 +62,7 @@
 
 ## Storage keys
 
-The doc keys are in [07-notes.md](07-notes.md). The device preferences are `pwa-landlord.lang`,
+The doc keys are in [07-properties.md](07-properties.md). The device preferences are `pwa-landlord.lang`,
 `pwa-landlord.hand`, `pwa-landlord.theme`, `pwa-landlord.modules` and `pwa-landlord.onboarded`.
 
 ## Change guide
@@ -85,7 +84,6 @@ The doc keys are in [07-notes.md](07-notes.md). The device preferences are `pwa-
 
 | Test file | Covers |
 |---|---|
-| `tests/notes.test.js` | The note operations and the validation of the doc (demo) |
 | `tests/properties.test.js` | The property operations and the validation of the doc |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/install.test.js` | The install offer states (INS-1) |

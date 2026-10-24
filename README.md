@@ -17,7 +17,8 @@ From the template it has:
 - a release script and a GitHub Pages deploy on a version tag;
 - structural tests that keep the layers, the text, the design system and the specification in step.
 
-The notes demo of the template is still in place until the domain replaces it.
+The first domain is the Properties section: the houses under management, each with a name and an
+address. It replaced the notes demo of the template.
 
 ## Develop
 

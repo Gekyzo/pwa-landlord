@@ -14,7 +14,7 @@ through it again before a release that adds a section, a stored doc or a manifes
 
 ## Domain
 
-- [ ] The notes demo is replaced or deleted. `docs/spec/07-notes.md` lists its files.
+- [x] The notes demo is replaced: `docs/spec/07-properties.md` lists the files of its successor.
 - [ ] Each stored doc has a `version` and a `normalize`. A new version has its migration.
 - [ ] Export and import cover each stored doc that the user can lose.
 - [ ] The rules of the new domain are in `docs/spec/`, with a prefix in its README.

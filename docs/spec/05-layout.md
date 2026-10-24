@@ -6,12 +6,12 @@ Rules of `src/sections.js`, `src/modules.js`, `src/onboarding.js`, the views `na
 ## Size classes
 
 The size classes, the navigation element, the `pane` layout and the safe areas are the rules
-LAY-1 to LAY-4 of the design system (04-design-system). In this app the Notes section uses the
-`pane` layout (LAY-3). From 840px, with no note open, the detail says `notes.pick`.
+LAY-1 to LAY-4 of the design system (04-design-system). In this app the Properties section uses
+the `pane` layout (LAY-3). From 840px, with no property open, the detail says `properties.pick`.
 
 ## Navigation
 
-- **NAV-1** The sections are `notes` and `settings`, in the order of `SECTIONS`. The navigation
+- **NAV-1** The sections are `properties` and `settings`, in the order of `SECTIONS`. The navigation
   shows one item for each section that is on (MOD-1). The current one has
   `aria-current="page"`, and its title is the title of the header.
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
@@ -20,8 +20,8 @@ LAY-1 to LAY-4 of the design system (04-design-system). In this app the Notes se
 
 ## Modules
 
-- **MOD-1** `MODULES` lists the parts that Settings turns off: `notes`, which shows the Notes
-  section. With a module off, its sections leave the navigation, and a view of one of them goes
+- **MOD-1** `MODULES` lists the parts that Settings turns off: `properties`, which shows the
+  Properties section. With a module off, its sections leave the navigation, and a view of one of them goes
   to the first section that is on.
 - **MOD-2** The modules that are off are a preference of the device under `pwa-landlord.modules`,
   not part of the doc. No module off removes the key.

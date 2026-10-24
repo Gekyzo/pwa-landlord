@@ -4,7 +4,7 @@ User-visible changes, newest first.
 
 ## Unreleased
 
-No change.
+- The Properties section replaces the notes demo: create, edit, delete and reorder properties, each with a name (required, at most 80 characters) and an address (optional, at most 200). The doc is `pwa-landlord.properties`; the `pwa-landlord.notes` key of 0.1.1 is no longer read.
 
 ## 0.1.1 - 2026-10-24
 

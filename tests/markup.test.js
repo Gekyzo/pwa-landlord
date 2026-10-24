@@ -34,17 +34,18 @@ test('the markup has no text of its own', () => {
   assert.doesNotMatch(body, /\s(aria-label|placeholder|title)="/);
 });
 
-test('the note sheet has a veil, a dialog and a text field with the maximum length', () => {
-  const [layer = ''] = body.match(/<div id="note-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
-  assert.match(layer, /<div id="note-veil" class="sheet-veil">/);
-  assert.match(layer, /<form id="note-form" class="sheet" role="dialog"/);
-  assert.match(layer, /<textarea id="note-text"[^>]*maxlength="200"/);
+test('the property sheet has a veil, a dialog, a name and an address with their maximum lengths', () => {
+  const [layer = ''] = body.match(/<div id="property-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
+  assert.match(layer, /<div id="property-veil" class="sheet-veil">/);
+  assert.match(layer, /<form id="property-form" class="sheet" role="dialog"/);
+  assert.match(layer, /<input id="property-name"[^>]*maxlength="80" required/);
+  assert.match(layer, /<input id="property-address"[^>]*maxlength="200"/);
 });
 
-test('the note sheet has a head with its title and Close, a body, and Save in its foot', () => {
-  const [layer = ''] = body.match(/<div id="note-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
-  assert.match(layer, /<header class="sheet-head"><h2 id="note-sheet-title" class="sheet-title main"><\/h2><button id="note-close" class="button tonal" type="button" data-i18n="notes.close"><\/button><\/header>\s*<div class="sheet-body">/);
-  assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="notes.save"><\/button><\/footer>\s*<\/form>/);
+test('the property sheet has a head with its title and Close, a body, and Save in its foot', () => {
+  const [layer = ''] = body.match(/<div id="property-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
+  assert.match(layer, /<header class="sheet-head"><h2 id="property-sheet-title" class="sheet-title main"><\/h2><button id="property-close" class="button tonal" type="button" data-i18n="properties.close"><\/button><\/header>\s*<div class="sheet-body">/);
+  assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"><\/button><\/footer>\s*<\/form>/);
 });
 
 test('the walkthrough has one drawing for each page, in the order of the pages', () => {

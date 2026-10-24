@@ -1,6 +1,6 @@
 import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
-import { bind as bindNotes, renderNotes, closeNoteSheet } from '#ui/notes';
+import { bind as bindProperties, renderProperties, closePropertySheet } from '#ui/properties';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -11,7 +11,7 @@ import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } fr
 const renderAll = () => {
   renderNav();
   $('title').textContent = t(`nav.${ui.view}`);
-  renderNotes();
+  renderProperties();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -19,7 +19,7 @@ const renderAll = () => {
 setRender(renderAll);
 
 bindNav();
-bindNotes();
+bindProperties();
 bindSettings();
 bindInstall();
 bindDrag();
@@ -49,9 +49,9 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   endReorder(false);
-  if (ui.sheetOpen) closeNoteSheet();
-  else if (ui.noteId !== null) {
-    ui.noteId = null;
+  if (ui.sheetOpen) closePropertySheet();
+  else if (ui.propertyId !== null) {
+    ui.propertyId = null;
     render();
   }
 });

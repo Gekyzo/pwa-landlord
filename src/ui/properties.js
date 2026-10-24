@@ -1,4 +1,4 @@
-import { addNote, editNote, deleteNote, findNote } from '#notes';
+import { addProperty, editProperty, deleteProperty, findProperty } from '#properties';
 import { bindSheetDrag } from '#ds/sheet';
 import { settle } from '#swipe';
 import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, apply, render, guardClick } from '#ui/context';
@@ -6,28 +6,30 @@ import { iconButton } from '#ui/controls';
 import { reorder, bindReorder } from '#ui/drag';
 
 const openSheet = (id = null) => {
+  const property = id ? findProperty(state, id) : null;
   ui.sheetOpen = true;
   ui.editing = id;
-  $('note-sheet-title').textContent = t(id ? 'notes.editTitle' : 'notes.new');
-  $('note-text').value = id ? findNote(state, id)?.text ?? '' : '';
+  $('property-sheet-title').textContent = t(id ? 'properties.editTitle' : 'properties.new');
+  $('property-name').value = property?.name ?? '';
+  $('property-address').value = property?.address ?? '';
   render();
-  $('note-text').focus();
+  $('property-name').focus();
 };
 
-export const closeNoteSheet = () => {
+export const closePropertySheet = () => {
   ui.sheetOpen = false;
   ui.editing = null;
   render();
 };
 
-const openNote = (id) => {
-  ui.noteId = id;
+const openProperty = (id) => {
+  ui.propertyId = id;
   render();
 };
 
 const remove = (id) => {
-  if (ui.noteId === id) ui.noteId = null;
-  apply(deleteNote(state, id), { undoText: t('toast.noteDeleted') });
+  if (ui.propertyId === id) ui.propertyId = null;
+  apply(deleteProperty(state, id), { undoText: t('toast.propertyDeleted') });
 };
 
 export const moveRow = (row, x) => {
@@ -60,7 +62,7 @@ const bindSwipe = (row, width, id) => {
     const { active, x, at } = drag;
     drag = null;
     if (!active) return;
-    // The click that follows a drag must not open the note.
+    // The click that follows a drag must not open the property.
     guardClick();
     const side = settle(event.clientX - x, { start: 0, end: width }, ui.openId === id ? 'end' : null);
     ui.openId = side ? id : null;
@@ -72,64 +74,68 @@ const bindSwipe = (row, width, id) => {
 };
 
 // A row slides left to show Delete (swipe), and a hold lifts it to a new place (drag).
-const row = (note) => {
-  const open = ui.openId === note.id;
-  const actions = [iconButton('trash', t('row.delete', { text: note.text }), () => remove(note.id), { variant: 'danger' })];
+const row = (property) => {
+  const open = ui.openId === property.id;
+  const actions = [
+    iconButton('trash', t('row.delete', { text: property.name }), () => remove(property.id), { variant: 'danger' }),
+  ];
   const width = actions.length * SIDE_BUTTON;
-  const name = el('button', { className: 'item-row-name', type: 'button', tabIndex: -1, onclick: () => openNote(note.id) }, [
-    el('span', { textContent: note.text }),
+  const name = el('button', { className: 'item-row-name', type: 'button', tabIndex: -1, onclick: () => openProperty(property.id) }, [
+    el('span', { textContent: property.name }),
   ]);
   const body = el('div', { className: 'item-row-body' }, [name]);
-  const from = ui.settleFrom?.id === note.id ? ui.settleFrom.x : null;
+  const from = ui.settleFrom?.id === property.id ? ui.settleFrom.x : null;
   if (from !== null) {
     // Start where the drag ended, then move to the settled place with the CSS transition.
     moveRow(body, from);
     requestAnimationFrame(() => requestAnimationFrame(() => moveRow(body, open ? -width : 0)));
   } else moveRow(body, open ? -width : 0);
-  bindSwipe(body, width, note.id);
+  bindSwipe(body, width, property.id);
   const box = el('div', { className: open ? 'item-row-swipe open' : 'item-row-swipe' }, [
     el('div', { className: 'item-row-actions', inert: !open }, actions),
     body,
   ]);
   const node = el('li', { className: 'item-row' }, [box]);
-  Object.assign(node.dataset, { id: note.id, scope: 'notes' });
-  bindReorder(body, node, note.id);
+  Object.assign(node.dataset, { id: property.id, scope: 'properties' });
+  bindReorder(body, node, property.id);
   return node;
 };
 
-export const renderNotes = () => {
-  const visible = ui.view === 'notes';
-  $('notes').hidden = !visible;
+export const renderProperties = () => {
+  const visible = ui.view === 'properties';
+  $('properties').hidden = !visible;
   $('fab').hidden = !visible || ui.sheetOpen;
-  if (ui.openId && !findNote(state, ui.openId)) ui.openId = null;
-  $('note-list').replaceChildren(...state.notes.map(row));
+  if (ui.openId && !findProperty(state, ui.openId)) ui.openId = null;
+  $('property-list').replaceChildren(...state.properties.map(row));
   ui.settleFrom = null;
-  $('notes-empty').hidden = state.notes.length > 0;
-  const note = ui.noteId === null ? null : findNote(state, ui.noteId);
-  if (!note) ui.noteId = null;
+  $('properties-empty').hidden = state.properties.length > 0;
+  const property = ui.propertyId === null ? null : findProperty(state, ui.propertyId);
+  if (!property) ui.propertyId = null;
   // The pane shows the detail alone below 840px, and beside the list from 840px (LAY-3).
-  if (note) $('notes').dataset.detail = '';
-  else delete $('notes').dataset.detail;
-  $('note-detail-text').textContent = note?.text ?? '';
-  $('note-detail-empty').hidden = Boolean(note);
-  $('note-actions').hidden = !note;
-  $('note-sheet').hidden = !ui.sheetOpen;
+  if (property) $('properties').dataset.detail = '';
+  else delete $('properties').dataset.detail;
+  $('property-detail-name').textContent = property?.name ?? '';
+  $('property-detail-address').textContent = property?.address ?? '';
+  $('property-detail-address').hidden = !property?.address;
+  $('property-detail-empty').hidden = Boolean(property);
+  $('property-actions').hidden = !property;
+  $('property-sheet').hidden = !ui.sheetOpen;
 };
 
 export const bind = () => {
   $('fab').addEventListener('click', () => openSheet());
-  $('notes-add').addEventListener('click', () => openSheet());
-  $('note-veil').addEventListener('click', closeNoteSheet);
-  $('note-close').addEventListener('click', closeNoteSheet);
-  bindSheetDrag($('note-sheet'), { close: closeNoteSheet });
-  $('note-back').addEventListener('click', () => openNote(null));
-  $('note-edit').addEventListener('click', () => openSheet(ui.noteId));
-  $('note-delete').addEventListener('click', () => remove(ui.noteId));
-  $('note-form').addEventListener('submit', (event) => {
+  $('properties-add').addEventListener('click', () => openSheet());
+  $('property-veil').addEventListener('click', closePropertySheet);
+  $('property-close').addEventListener('click', closePropertySheet);
+  bindSheetDrag($('property-sheet'), { close: closePropertySheet });
+  $('property-back').addEventListener('click', () => openProperty(null));
+  $('property-edit').addEventListener('click', () => openSheet(ui.propertyId));
+  $('property-delete').addEventListener('click', () => remove(ui.propertyId));
+  $('property-form').addEventListener('submit', (event) => {
     event.preventDefault();
-    const text = $('note-text').value;
-    const result = ui.editing ? editNote(state, ui.editing, text) : addNote(state, text);
-    if (apply(result)) closeNoteSheet();
+    const fields = { name: $('property-name').value, address: $('property-address').value };
+    const result = ui.editing ? editProperty(state, ui.editing, fields) : addProperty(state, fields);
+    if (apply(result)) closePropertySheet();
   });
   // A tap out of the open row closes it, without a render, so that the tap still does its work.
   document.addEventListener(

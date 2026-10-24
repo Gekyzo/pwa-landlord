@@ -26,21 +26,22 @@
     </div>
 
     <main>
-      <section id="notes" class="pane">
+      <section id="properties" class="pane">
         <div class="pane-list">
-          <ul id="note-list" class="item-list"></ul>
-          <div id="notes-empty" class="empty-state" hidden>
-            <p data-i18n="notes.empty"></p>
-            <button id="notes-add" class="button primary" type="button" data-i18n="notes.add"></button>
+          <ul id="property-list" class="item-list"></ul>
+          <div id="properties-empty" class="empty-state" hidden>
+            <p data-i18n="properties.empty"></p>
+            <button id="properties-add" class="button primary" type="button" data-i18n="properties.add"></button>
           </div>
         </div>
-        <article id="note-detail" class="pane-detail">
-          <button id="note-back" class="button quiet pane-back" type="button" data-i18n="notes.back"></button>
-          <p id="note-detail-empty" class="empty-state inline" data-i18n="notes.pick"></p>
-          <p id="note-detail-text"></p>
-          <div id="note-actions" class="cluster">
-            <button id="note-edit" class="button outline" type="button" data-i18n="notes.edit"></button>
-            <button id="note-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="notes.delete"></span></button>
+        <article id="property-detail" class="pane-detail">
+          <button id="property-back" class="button quiet pane-back" type="button" data-i18n="properties.back"></button>
+          <p id="property-detail-empty" class="empty-state inline" data-i18n="properties.pick"></p>
+          <h2 id="property-detail-name" class="property-name"></h2>
+          <p id="property-detail-address" class="property-address"></p>
+          <div id="property-actions" class="cluster">
+            <button id="property-edit" class="button outline" type="button" data-i18n="properties.edit"></button>
+            <button id="property-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="properties.delete"></span></button>
           </div>
         </article>
       </section>
@@ -74,7 +75,7 @@
         </div>
         <h2 class="list-group-head" data-i18n="settings.modules"></h2>
         <div class="list-group">
-          <label class="switch"><span data-i18n="nav.notes"></span><input class="switch-input" type="checkbox" role="switch" data-module="notes"></label>
+          <label class="switch"><span data-i18n="nav.properties"></span><input class="switch-input" type="checkbox" role="switch" data-module="properties"></label>
         </div>
         <div id="install-group" hidden>
           <h2 class="list-group-head" data-i18n="settings.app"></h2>
@@ -94,12 +95,12 @@
       </section>
     </main>
 
-    <button id="fab" class="fab" type="button" data-i18n-attr="aria-label:notes.add">+</button>
+    <button id="fab" class="fab" type="button" data-i18n-attr="aria-label:properties.add">+</button>
 
     <nav class="nav-bar" data-i18n-attr="aria-label:nav.label">
-      <button class="nav-item" type="button" data-view="notes">
-        <svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg>
-        <span data-i18n="nav.notes"></span>
+      <button class="nav-item" type="button" data-view="properties">
+        <svg class="icon" aria-hidden="true"><use href="icons.svg#house"/></svg>
+        <span data-i18n="nav.properties"></span>
       </button>
       <button class="nav-item" type="button" data-view="settings">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg>
@@ -116,15 +117,16 @@
       </section>
     </div>
 
-    <div id="note-sheet" class="sheet-layer" hidden>
-      <div id="note-veil" class="sheet-veil"></div>
-      <form id="note-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="note-sheet-title" autocomplete="off">
+    <div id="property-sheet" class="sheet-layer" hidden>
+      <div id="property-veil" class="sheet-veil"></div>
+      <form id="property-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="property-sheet-title" autocomplete="off">
         <div class="sheet-grab"></div>
-        <header class="sheet-head"><h2 id="note-sheet-title" class="sheet-title main"></h2><button id="note-close" class="button tonal" type="button" data-i18n="notes.close"></button></header>
+        <header class="sheet-head"><h2 id="property-sheet-title" class="sheet-title main"></h2><button id="property-close" class="button tonal" type="button" data-i18n="properties.close"></button></header>
         <div class="sheet-body">
-          <label class="field"><textarea id="note-text" class="input field-input" maxlength="200" rows="3" required data-i18n-attr="placeholder:notes.text"></textarea><span class="field-label" data-i18n="notes.text"></span></label>
+          <label class="field"><input id="property-name" class="input field-input" type="text" maxlength="80" required data-i18n-attr="placeholder:properties.name"><span class="field-label" data-i18n="properties.name"></span></label>
+          <label class="field"><input id="property-address" class="input field-input" type="text" maxlength="200" data-i18n-attr="placeholder:properties.address"><span class="field-label" data-i18n="properties.address"></span></label>
         </div>
-        <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="notes.save"></button></footer>
+        <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
       </form>
     </div>
 
@@ -165,7 +167,6 @@
           "#app": "./src/app.js",
           "#ds/sheet": "./vendor/design-system/sheet.js",
           "#config": "./src/config.js",
-          "#notes": "./src/notes.js",
           "#properties": "./src/properties.js",
           "#install": "./src/install.js",
           "#sections": "./src/sections.js",
@@ -181,7 +182,7 @@
           "#ui/install": "./src/ui/install.js",
           "#ui/motion": "./src/ui/motion.js",
           "#ui/nav": "./src/ui/nav.js",
-          "#ui/notes": "./src/ui/notes.js",
+          "#ui/properties": "./src/ui/properties.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",
           "#reorder": "./src/reorder.js",

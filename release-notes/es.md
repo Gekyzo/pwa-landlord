@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.2.0 - 2026-10-24
+
 - Añade tus viviendas: pulsa `+`, escribe un nombre y, si quieres, una dirección. Pulsa una vivienda para verla, editarla o borrarla.
 
 ## 0.1.1 - 2026-10-24

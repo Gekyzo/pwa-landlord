@@ -1,4 +1,4 @@
-const CACHE = 'pwa-landlord-shell-v1';
+const CACHE = 'pwa-landlord-shell-v2';
 
 const SHELL = [
   './',
@@ -11,6 +11,8 @@ const SHELL = [
   './manifest.webmanifest',
   './src/app.js',
   './src/config.js',
+  './src/pocketbase.js',
+  './src/session.js',
   './src/ui/context.js',
   './src/ui/controls.js',
   './src/ui/install.js',
@@ -23,6 +25,7 @@ const SHELL = [
   './src/ui/dust.js',
   './src/ui/onboarding.js',
   './src/ui/whatsnew.js',
+  './src/ui/account.js',
   './src/swipe.js',
   './src/reorder.js',
   './src/particles.js',

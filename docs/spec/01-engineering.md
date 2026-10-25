@@ -4,7 +4,9 @@
 
 | Module | Responsibility | May import |
 |---|---|---|
-| `src/config.js` | The slug of the app, which `npm run init` rewrites | nothing |
+| `src/config.js` | The slug of the app, which `npm run init` rewrites, and the URL of the account server | nothing |
+| `src/pocketbase.js` | The client of the account server: Google sign-in, refresh, the access row (ACC-3) | `config` |
+| `src/session.js` | The session on the device, the start route and the return from Google (ACC-1, ACC-4, ACC-5) | `storage` |
 | `src/version.js` | Version rules and the update offer rule | nothing |
 | `src/whatsnew.js` | The parse of the release notes and the versions that a user has not seen | `version` |
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
@@ -29,6 +31,7 @@
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
+| `src/ui/account.js` | The account screens and the group Account of Settings (ACC-1 to ACC-10) | `pocketbase`, `session`, `config`, `ui/context` |
 | `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
 
 ## Code rules
@@ -63,7 +66,8 @@
 ## Storage keys
 
 The doc keys are in [07-properties.md](07-properties.md). The device preferences are `pwa-landlord.lang`,
-`pwa-landlord.hand`, `pwa-landlord.theme`, `pwa-landlord.modules` and `pwa-landlord.onboarded`.
+`pwa-landlord.hand`, `pwa-landlord.theme`, `pwa-landlord.modules` and `pwa-landlord.onboarded`. The account keeps `pwa-landlord.session` (ACC-5) and
+`pwa-landlord.offline` (ACC-10), and `pwa-landlord.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4).
 
 ## Change guide
 
@@ -85,6 +89,8 @@ The doc keys are in [07-properties.md](07-properties.md). The device preferences
 | Test file | Covers |
 |---|---|
 | `tests/properties.test.js` | The property operations and the validation of the doc |
+| `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6) |
+| `tests/session.test.js` | The session, the start route, the offline flag, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5, ACC-10) |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
@@ -98,7 +104,7 @@ The doc keys are in [07-properties.md](07-properties.md). The device preferences
 | `tests/whatsnew.test.js` | The parse of the release notes and the unseen versions |
 | `tests/release-notes-files.test.js` | One release-notes file for each language, with the same versions (VER-19) |
 | `tests/i18n.test.js` | The language choice, the translator, the parity of the catalogs |
-| `tests/markup.test.js` | `index.html` holds no text of its own; the sheet and the walkthrough markup |
+| `tests/markup.test.js` | `index.html` holds no text of its own; the sheet, the walkthrough and the account markup |
 | `tests/aliases.test.js` | The import map against `package.json`; each `#ds/` alias names a vendored module |
 | `tests/layers.test.js` | The layer rules and `SHELL` (ENG-16) |
 | `tests/design.test.js` | Each rule of `vendor/design-system/rules.js` over the two stylesheets, `index.html`, `icons.svg`, `src/ui/` and `designs/`, and the parts of `styles.css` (DSV-3) |

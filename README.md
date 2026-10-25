@@ -28,6 +28,19 @@ npm test
 npm run ds      # copy the design system again from ../pwa-design-system
 ```
 
+## Account and set-up outside the app
+
+The app opens with **Sign in**: **Continue with Google** (an account on the PocketBase server of
+`pwa-server`, approved per app) or **Use offline** (no account). The properties stay on the device in
+both modes; nothing syncs. The rules are in [docs/spec/08-account.md](docs/spec/08-account.md).
+
+The server slug is `APP_SLUG` of `src/config.js`, which `npm run init` rewrites. Two steps happen
+outside the app, and the app works offline without them:
+
+1. A row in `apps` on the server (`/_/`): slug `APP_SLUG`, url `https://<user>.github.io/<slug>/`.
+2. The redirect URIs `https://<user>.github.io/<slug>/` and `http://localhost:8080/` on the
+   Google OAuth client.
+
 ## Install on Android
 
 Open the deployed URL in Chrome. Use the **Install** button of Settings, or Chrome menu →

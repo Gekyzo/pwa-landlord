@@ -4,6 +4,10 @@ User-visible changes, newest first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.1 - 2026-10-25
+
 - Google sign-in and the approval gate of the PocketBase server, with an offline choice, as in `pwa-template` (ACC-1 to ACC-10, `docs/spec/08-account.md`): `src/pocketbase.js`, `src/session.js`, `src/ui/account.js`. The app opens for an approved Google account or, after **Use offline**, with no account. Nothing syncs. Keys `pwa-landlord.session`, `pwa-landlord.offline` and `pwa-landlord.oauth` (`sessionStorage`). The shell cache is `pwa-landlord-shell-v2`.
 
 ## 0.2.0 - 2026-10-24

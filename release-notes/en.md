@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.1 - 2026-10-25
+
 - You sign in with your Google account, or tap **Use offline** to use the app with no account. The administrator approves each new account. Your properties stay on this device.
 
 ## 0.2.0 - 2026-10-24

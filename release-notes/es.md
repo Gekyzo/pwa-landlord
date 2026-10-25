@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.2.1 - 2026-10-25
+
 - Entras con tu cuenta de Google, o tocas **Usar sin conexión** para usar la app sin cuenta. El administrador aprueba cada cuenta nueva. Tus propiedades se quedan en este dispositivo.
 
 ## 0.2.0 - 2026-10-24

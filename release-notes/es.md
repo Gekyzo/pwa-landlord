@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Guarda en el dispositivo los PDF y las fotos de cada vivienda: el contrato de alquiler, los seguros y los contratos de luz y gas. Cada gasto puede llevar su recibo. La copia exportada no incluye los archivos.
 - La lista de viviendas muestra debajo de cada nombre lo que debe el inquilino, en rojo, y el neto de este año.
 - Cada vivienda tiene sus finanzas del año: el alquiler cobrado, los gastos por tipo (hipoteca, derramas, IBI, IRPF, seguros) y el neto. Apunta la hipoteca en la ficha de la vivienda y elige el tipo de cada gasto.
 - La app tiene un icono nuevo: tres casas y una llave dorada.

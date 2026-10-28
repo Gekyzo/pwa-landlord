@@ -11,6 +11,7 @@ import {
   removeDocument,
   attachReceipt,
   fileIds,
+  formatSize,
 } from '#documents';
 
 const property = (fields = {}) => ({
@@ -93,4 +94,11 @@ test('fileIds names every document and receipt', () => {
     ],
   };
   assert.deepEqual(fileIds(state), new Set(['a', 'r', 'b']));
+});
+
+test('formatSize shows kilobytes below 1 MB and megabytes from there, in the language', () => {
+  assert.equal(formatSize(512, 'en'), '1 kB');
+  assert.equal(formatSize(2048, 'en'), '2 kB');
+  assert.equal(formatSize(1536 * 1024, 'en'), '1.5 MB');
+  assert.equal(formatSize(1536 * 1024, 'es'), '1,5 MB');
 });

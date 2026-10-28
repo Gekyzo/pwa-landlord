@@ -1,8 +1,11 @@
-import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
+import { $, ui, state, storage, t, setRender, setFiles, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindProperties, renderProperties, closePropertySheet } from '#ui/properties';
 import { bind as bindBalance, renderBalance, closeExpenseSheet } from '#ui/balance';
 import { bind as bindFinances, renderFinances } from '#ui/finances';
+import { renderDocuments } from '#ui/documents';
+import { openFiles, prune } from '#files';
+import { fileIds } from '#documents';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -22,6 +25,7 @@ const renderAll = () => {
   renderProperties();
   renderBalance();
   renderFinances();
+  renderDocuments();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -95,4 +99,21 @@ readVersion('./version.json').then((running) => {
   renderVersion();
   startWhatsNew(running);
   navigator.serviceWorker?.ready.then(offerUpdate).catch(() => {});
+});
+
+// The store of the files (DOC-4). The blobs that no file of the doc names go at each start, so an
+// undo in the session before always finds its blob. An empty doc prunes nothing: it may be one
+// that did not load (PROP-1).
+openFiles(window.indexedDB).then(async (store) => {
+  let keys = [];
+  if (store) {
+    try {
+      if (state.properties.length > 0) await prune(store, fileIds(state));
+      keys = await store.keys();
+    } catch {
+      // A store that cannot be read shows each file as missing; nothing is lost.
+    }
+  }
+  setFiles(store, new Set(keys));
+  render();
 });

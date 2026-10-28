@@ -4,11 +4,19 @@ import { KINDS, findProperty } from '#properties';
 import { intlTag } from '#i18n';
 import { bindSheetDrag } from '#ds/sheet';
 import { $, el, ui, state, t, lang, apply, render } from '#ui/context';
+import { attachReceipt } from '#documents';
 import { icon } from '#ui/controls';
+import { pickFile, saveFile, openFile } from '#ui/documents';
 
 // The Balance part of the detail of a property (BAL-2 to BAL-6) and the sheet of an extra cost.
 const today = () => localDay(new Date());
 const money = (cents) => formatAmount(cents, intlTag(lang));
+
+// The receipt picked in the sheet, saved with the cost (DOC-7).
+let receipt = null;
+const showReceipt = () => {
+  $('expense-receipt-name').textContent = receipt?.name ?? t('expense.receiptNone');
+};
 
 const openExpenseSheet = () => {
   ui.expenseOpen = true;
@@ -17,6 +25,8 @@ const openExpenseSheet = () => {
   // Built at each opening so that its texts follow the language.
   $('expense-kind').replaceChildren(...KINDS.map((kind) => el('option', { value: kind, textContent: t(`kind.${kind}`) })));
   $('expense-kind').value = 'other';
+  receipt = null;
+  showReceipt();
   render();
   $('expense-title').focus();
 };
@@ -50,12 +60,22 @@ const expenseRow = (propertyId, expense) => {
   remove.addEventListener('click', () =>
     apply(deleteExpense(state, propertyId, expense.id), { undoText: t('toast.expenseDeleted') }),
   );
+  const open = [];
+  if (expense.file) {
+    const text = t('balance.openReceipt', { title: expense.title });
+    const clip = el('button', { type: 'button', className: 'button quiet balance-receipt', title: text, onclick: () => openFile(expense.file) }, [
+      icon('clip'),
+    ]);
+    clip.setAttribute('aria-label', text);
+    open.push(clip);
+  }
   return el('li', { className: 'balance-row' }, [
     el('span', { className: 'balance-row-name' }, [
       el('span', { textContent: expense.title }),
       el('small', { className: 'balance-row-meta', textContent: `${formatDay(expense.date, intlTag(lang))} · ${t(`kind.${expense.kind}`)}` }),
     ]),
     el('span', { className: 'balance-row-amount', textContent: money(expense.amount) }),
+    ...open,
     remove,
   ]);
 };
@@ -83,7 +103,11 @@ export const bind = () => {
   $('expense-veil').addEventListener('click', closeExpenseSheet);
   $('expense-close').addEventListener('click', closeExpenseSheet);
   bindSheetDrag($('expense-sheet'), { close: closeExpenseSheet });
-  $('expense-form').addEventListener('submit', (event) => {
+  $('expense-receipt').addEventListener('click', async () => {
+    receipt = (await pickFile()) ?? receipt;
+    showReceipt();
+  });
+  $('expense-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const fields = {
       title: $('expense-title').value,
@@ -91,6 +115,17 @@ export const bind = () => {
       date: $('expense-date').value,
       kind: $('expense-kind').value,
     };
-    if (apply(addExpense(state, ui.propertyId, fields))) closeExpenseSheet();
+    const propertyId = ui.propertyId;
+    const id = crypto.randomUUID();
+    // The cost is checked before the blob is saved, so that a wrong field saves no file.
+    const checked = addExpense(state, propertyId, fields, id);
+    if (checked.error || !receipt) {
+      if (apply(checked)) closeExpenseSheet();
+      return;
+    }
+    const meta = await saveFile(receipt);
+    if (!meta) return;
+    const added = addExpense(state, propertyId, fields, id);
+    if (apply(added.error ? added : attachReceipt(added.state, propertyId, id, meta))) closeExpenseSheet();
   });
 };

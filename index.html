@@ -61,6 +61,11 @@
             <label class="field finances-year"><select id="finance-year" class="select field-input"></select><span class="field-label" data-i18n="finances.year"></span></label>
             <dl id="finance-rows" class="finances-list"></dl>
           </section>
+          <section id="property-documents" class="documents">
+            <h3 class="documents-title" data-i18n="documents.title"></h3>
+            <p id="documents-unavailable" class="documents-note" data-i18n="documents.unavailable" hidden></p>
+            <ul id="document-slots" class="documents-list"></ul>
+          </section>
         </article>
       </section>
 
@@ -78,6 +83,7 @@
           <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span class="chevron" aria-hidden="true">›</span></button>
           <button id="import" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.import"></span><span class="chevron" aria-hidden="true">›</span></button>
         </div>
+        <p class="backup-note" data-i18n="settings.exportNote"></p>
         <h2 class="list-group-head" data-i18n="settings.preferences"></h2>
         <div class="list-group">
           <div class="settings-row">
@@ -177,10 +183,17 @@
           <label class="field"><input id="expense-amount" class="input field-input" type="text" inputmode="decimal" required data-i18n-attr="placeholder:expense.amount"><span class="field-label" data-i18n="expense.amount"></span></label>
           <label class="field"><input id="expense-date" class="input field-input" type="date" required><span class="field-label" data-i18n="expense.date"></span></label>
           <label class="field"><select id="expense-kind" class="select field-input"></select><span class="field-label" data-i18n="expense.kind"></span></label>
+          <div class="receipt-field">
+            <span class="receipt-label" data-i18n="expense.receipt"></span>
+            <span id="expense-receipt-name" class="receipt-name"></span>
+            <button id="expense-receipt" class="button outline" type="button" data-i18n="expense.receiptPick"></button>
+          </div>
         </div>
         <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
       </form>
     </div>
+
+    <input id="document-input" type="file" accept="application/pdf,image/jpeg,image/png" hidden>
 
     <div id="onboarding" class="onboarding" role="dialog" aria-modal="true" data-i18n-attr="aria-label:onboarding.label" hidden>
       <img class="onboarding-logo" src="./icons/logo.png" alt="">
@@ -262,6 +275,7 @@
           "#ui/properties": "./src/ui/properties.js",
           "#ui/balance": "./src/ui/balance.js",
           "#ui/finances": "./src/ui/finances.js",
+          "#ui/documents": "./src/ui/documents.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",
           "#reorder": "./src/reorder.js",

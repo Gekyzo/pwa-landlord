@@ -60,3 +60,10 @@ export const fileIds = (state) =>
       ...property.expenses.filter(({ file }) => file).map(({ file }) => file.id),
     ]),
   );
+
+// The size of a file: whole kilobytes below 1 MB (at least 1), megabytes with one decimal from there.
+export const formatSize = (bytes, tag) => {
+  const mega = bytes >= 1024 * 1024;
+  const value = mega ? bytes / 1024 / 1024 : Math.max(1, Math.round(bytes / 1024));
+  return new Intl.NumberFormat(tag, { style: 'unit', unit: mega ? 'megabyte' : 'kilobyte', maximumFractionDigits: 1 }).format(value);
+};

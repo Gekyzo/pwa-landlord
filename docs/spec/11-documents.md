@@ -2,8 +2,11 @@
 
 The files of a property (contract, insurances, supply contracts) and the receipt of an extra
 cost, kept on the device. Its files are `src/documents.js`, `src/files.js`,
-`tests/documents.test.js`, `tests/files.test.js` and the `error.file*`, `error.slotInvalid` and
-`error.documentMissing` keys of the catalogs.
+`src/ui/documents.js`, `tests/documents.test.js`, `tests/files.test.js`, the `documents.*`,
+`expense.receipt*`, `balance.openReceipt`, `toast.documentDeleted`, `settings.exportNote`,
+`error.file*`, `error.slotInvalid` and `error.documentMissing` keys of the catalogs, the
+`#property-documents` part of the detail, the receipt field of `#expense-sheet` and
+`#document-input` of `index.html`.
 
 ## Doc
 
@@ -30,3 +33,26 @@ cost, kept on the device. Its files are `src/documents.js`, `src/files.js`,
   or a refused open; a write waits for the end of its transaction, so a refused write (quota) is
   an error. `prune` removes each blob whose id is not in a set and gives the count. A removed or
   replaced file keeps its blob until the next start, so an undo finds it.
+
+## Screen
+
+- **DOC-5** The detail of a property ends with **Documents**: for each slot, in the order of
+  `SLOTS`, its name, then its files. A file shows its name, its size (`formatSize`: kB below 1 MB,
+  MB with one decimal from there) and the day it was added; a tap on it opens the blob in a new tab
+  from an object URL, revoked after 60 seconds. A slot of one file shows **Add** while it is empty,
+  and its file has **Replace** and **Delete**; **Other insurances** keeps **Add**, and each of its
+  files has **Delete**. A delete shows `toast.documentDeleted` with **Undo** for 5 seconds. With no
+  store (DOC-4) the part shows `documents.unavailable` in place of the slots, and the rest of the
+  app works.
+- **DOC-6** **Add** and **Replace** open the file picker of the device for a PDF, a JPEG or a PNG.
+  The file is checked (DOC-2, the error in a toast), then the blob is written to the store, then
+  the metadata to the doc; a refused write is `error.fileNotSaved` and changes nothing. The first
+  write of a run asks `navigator.storage.persist()`. A file whose blob is not in the store shows
+  `documents.missing` in the danger colour in place of its size; it can be replaced or deleted. At
+  each start, after the store opens, `prune` removes the blobs that no file of the doc names
+  (`fileIds`); an empty doc prunes nothing, since it may be a doc that did not load.
+- **DOC-7** The sheet of an extra cost has **Receipt**: the name of the picked file, or **None**,
+  and **Attach**. **Save** checks the cost first, then writes the receipt as DOC-6, then saves the
+  cost with it. A cost with a receipt shows a paper-clip button that opens it. The JSON export
+  holds the metadata only; Settings says so below **Backup** (`settings.exportNote`), and an
+  import from another device shows its files as `documents.missing`.

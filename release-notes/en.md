@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- Keep the PDFs and photos of each property on the device: the rental contract, the insurances and the power and gas contracts. Each cost can carry its receipt. The export does not include the files.
 - The property list shows, below each name, what the tenant owes, in red, and the net of this year.
 - Each property has its finances of the year: the rent collected, the costs by kind (mortgage, levies, IBI, income tax, insurances) and the net. Note the mortgage in the property sheet and pick the kind of each cost.
 - The app has a new icon: three houses and a gold key.

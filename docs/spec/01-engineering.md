@@ -31,15 +31,16 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/drag`, `ui/update`, `ui/dust` |
 | `src/ui/properties.js` | The Properties section, its rows and their glance (PROP-13), its summary and its sheet | `ds/sheet`, `properties`, `contract`, `finances`, `i18n`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
+| `src/ui/documents.js` | The Documents part of the detail of a property, and the pick, save and open of a file (DOC-5 to DOC-7) | `documents`, `properties`, `contract`, `i18n`, `ui/context`, `ui/controls` |
 | `src/ui/finances.js` | The Finances part of the detail of a property (FIN-5, FIN-6) | `finances`, `contract`, `properties`, `i18n`, `ui/context` |
-| `src/ui/balance.js` | The Balance part of the detail of a property and the sheet of an extra cost (BAL-7, BAL-8) | `balance`, `contract`, `properties`, `i18n`, `ds/sheet`, `ui/context`, `ui/controls` |
+| `src/ui/balance.js` | The Balance part of the detail of a property and the sheet of an extra cost with its receipt (BAL-7, BAL-8, DOC-7) | `balance`, `contract`, `documents`, `properties`, `i18n`, `ds/sheet`, `ui/context`, `ui/controls`, `ui/documents` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/drag.js` | The hold and move of a row (optional) | `properties`, `reorder`, `ui/context`, `ui/motion` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
 | `src/ui/account.js` | The account screens and the group Account of Settings (ACC-1 to ACC-10) | `pocketbase`, `session`, `config`, `ui/context` |
-| `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
+| `src/app.js` | Wires the views, the global keys, the service worker, the update check and the file store with its prune at the start | all of the above |
 
 ## Code rules
 

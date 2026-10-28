@@ -238,6 +238,7 @@
      @part balance-state      The button of a month: Unpaid in --danger, or Paid.
      @variant paid            On balance-state: the month is paid, in --done on --done-soft.
      @part balance-remove     The button that deletes an extra cost.
+     @part balance-receipt    The button that opens the receipt of an extra cost.
      @example <section class="balance"><h3 class="balance-title">Balance</h3><p class="balance-total due">Unpaid: €850.00 (1 month)</p><ul class="balance-list"><li class="balance-row"><span class="balance-row-name">March 2026</span><span class="balance-row-amount">€850.00</span><button class="balance-state" type="button">Unpaid</button></li><li class="balance-row"><span class="balance-row-name">February 2026</span><span class="balance-row-amount">€850.00</span><button class="balance-state paid" type="button">Paid</button></li></ul></section> */
   .balance {
     margin-top: var(--space-6);
@@ -315,7 +316,8 @@
     color: var(--done);
   }
 
-  .balance-remove {
+  .balance-remove,
+  .balance-receipt {
     color: var(--muted);
   }
 
@@ -381,6 +383,131 @@
 
   .finances-row.net.loss {
     color: var(--danger);
+  }
+
+  /* @component documents
+     @scope properties
+     @summary The files of one property, by slot: a head for each slot, then its files.
+     @part documents-title     The title of the part.
+     @part documents-note      The line that says the device cannot keep files.
+     @part documents-list      The list of the slots and their files.
+     @part documents-slot      The head of a slot: its name and Add while it can take a file.
+     @part documents-slot-name The name of a slot.
+     @part documents-row       One file: an icon, its name and its buttons.
+     @part documents-open      The button that opens the file: its name and its meta line.
+     @part documents-file      The name of the file.
+     @part documents-meta      The size and the date of the file, in second text.
+     @variant missing          On documents-meta: the blob is not on this device; the line is in --danger.
+     @part documents-action    A button of a file: Replace or Delete.
+     @example <section class="documents"><h3 class="documents-title">Documents</h3><ul class="documents-list"><li class="documents-slot"><span class="documents-slot-name">Rental contract</span></li><li class="documents-row"><svg class="icon" aria-hidden="true"><use href="icons.svg#file"/></svg><button class="documents-open" type="button"><span class="documents-file">contract.pdf</span><small class="documents-meta">240 kB · Mar 1, 2026</small></button><button class="button quiet documents-action" type="button" aria-label="Delete"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg></button></li><li class="documents-slot"><span class="documents-slot-name">Home insurance</span><button class="button outline" type="button">Add</button></li></ul></section> */
+  .documents {
+    margin-top: var(--space-6);
+  }
+
+  .documents-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--text-label);
+    font-weight: var(--weight-medium);
+  }
+
+  .documents-note {
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  .documents-list {
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .documents-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: var(--tap);
+    margin-top: var(--space-2);
+    font-weight: var(--weight-medium);
+  }
+
+  .documents-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .documents-open {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: var(--tap);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+
+  .documents-file {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .documents-meta {
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  .documents-meta.missing {
+    color: var(--danger);
+  }
+
+  .documents-action {
+    color: var(--muted);
+  }
+
+  /* @component receipt-field
+     @scope properties
+     @summary The receipt of the sheet of an extra cost: its label, the picked file and Attach.
+     @part receipt-label The label of the field.
+     @part receipt-name  The name of the picked file, or None, in second text.
+     @example <div class="receipt-field"><span class="receipt-label">Receipt</span><span class="receipt-name">None</span><button class="button outline" type="button">Attach</button></div> */
+  .receipt-field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    min-height: var(--tap);
+  }
+
+  .receipt-label {
+    font-weight: var(--weight-medium);
+  }
+
+  .receipt-name {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--muted);
+  }
+
+  /* @component backup-note
+     @scope settings
+     @summary A line of help below the Backup group of Settings.
+     @example <p class="backup-note">The export keeps the data of the files, not the files.</p> */
+  .backup-note {
+    margin: var(--space-2) var(--space-4) 0;
+    color: var(--muted);
+    font-size: var(--text-s);
   }
 
   /* @component about

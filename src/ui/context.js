@@ -155,6 +155,17 @@ export const apply = (result, { undoText = null } = {}) => {
   return true;
 };
 
+// The store of the blobs of the files (DOC-4), null until it opens or with no IndexedDB, and the
+// ids of the blobs that it holds, so that a file whose blob is missing shows so (DOC-6).
+export let files = null;
+export let filesReady = false;
+export let fileKeys = new Set();
+export const setFiles = (store, keys) => {
+  files = store;
+  fileKeys = keys;
+  filesReady = true;
+};
+
 // The click that follows a drag, a drop or a slide must not press the button below the finger.
 export let clickGuardUntil = 0;
 export const guardClick = () => {

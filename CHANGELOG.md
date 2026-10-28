@@ -4,6 +4,7 @@ User-visible changes, newest first.
 
 ## Unreleased
 
+- New app icon: three red houses and a gold key. `icons/source.png` is the new art (1254 px); `npm run icons` wrote `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` and `logo.png` again.
 - The balance of a property (BAL-1 to BAL-8, `docs/spec/09-balance.md`): the rent months since the contract start, each due on the start day, red while unpaid and green once marked paid; the paid amount is kept per month. Extra costs that the landlord pays (title, amount, date) with their own sheet and an undo on delete. New modules `src/balance.js` and `src/ui/balance.js`. The doc goes to version 3; versions 1 and 2 migrate with an empty balance. The shell cache is `pwa-landlord-shell-v4`.
 - The summary of a property (PROP-1 to PROP-4, PROP-8, PROP-10 to PROP-12): owner, tenant, contract start, monthly rent, deposit and the payer of each running cost, in the sheet and in the detail. The detail derives the end of the current year of contract and the 5-year limit (1 year, extended a year at a time up to 5). New pure module `src/contract.js`. The doc goes to version 2; a version 1 doc or export migrates. The shell cache is `pwa-landlord-shell-v3`.
 

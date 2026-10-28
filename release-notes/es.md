@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- La app tiene un icono nuevo: tres casas y una llave dorada.
 - Cada vivienda tiene su saldo: las mensualidades desde el inicio del contrato salen en rojo hasta que las marcas como pagadas, y entonces pasan a verde. También puedes apuntar los gastos que pagas tú, como la tasa de basuras.
 - Cada vivienda guarda el contrato: propietario, inquilino, fecha de inicio, mensualidad, fianza y quién paga cada gasto (comunidad, IBI, agua, luz, gas, basuras e internet). La ficha muestra cuándo acaba el año en curso y el límite de 5 años.
 

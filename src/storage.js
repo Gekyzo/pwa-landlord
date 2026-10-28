@@ -36,6 +36,28 @@ export const saveDoc = (storage, key, doc) => {
   }
 };
 
+// The ids of the blobs of the files that a delete or a replace dropped, each with the time (DOC-4).
+export const TRASH_KEY = keyOf('file-trash');
+
+export const loadTrash = (storage) => {
+  try {
+    const { data } = parse(storage.getItem(TRASH_KEY) ?? '{}');
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) return {};
+    return Object.fromEntries(Object.entries(data).filter(([, time]) => Number.isFinite(time)));
+  } catch {
+    return {};
+  }
+};
+
+export const saveTrash = (storage, trash) => {
+  try {
+    storage.setItem(TRASH_KEY, JSON.stringify(trash));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 // True when the storage holds a doc at `key`, valid or not: the install is not new.
 export const hasStoredDoc = (storage, key) => {
   try {

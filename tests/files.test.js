@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { openFiles, prune } from '#files';
+import { openFiles, discard } from '#files';
 
 // A store of the shape of openFiles, over a Map.
 const fakeStore = (ids) => {
@@ -13,16 +13,10 @@ const fakeStore = (ids) => {
   };
 };
 
-test('prune keeps the named ids and removes the rest', async () => {
+test('discard removes the given ids that the store holds and gives their count', async () => {
   const store = fakeStore(['a', 'b', 'c']);
-  assert.equal(await prune(store, new Set(['b'])), 2);
+  assert.equal(await discard(store, ['a', 'c', 'x']), 2);
   assert.deepEqual(await store.keys(), ['b']);
-});
-
-test('prune of a store with only named ids removes nothing', async () => {
-  const store = fakeStore(['a']);
-  assert.equal(await prune(store, new Set(['a', 'x'])), 0);
-  assert.deepEqual(await store.keys(), ['a']);
 });
 
 test('openFiles is null with no IndexedDB', async () => assert.equal(await openFiles(undefined), null));

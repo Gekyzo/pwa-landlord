@@ -37,9 +37,10 @@ export const openFiles = async (indexedDB) => {
   };
 };
 
-// Removes each blob that no metadata names; returns how many it removed.
-export const prune = async (store, keep) => {
-  const extra = (await store.keys()).filter((id) => !keep.has(id));
-  for (const id of extra) await store.remove(id);
-  return extra.length;
+// Removes the blobs of `ids` that the store holds; returns how many it removed.
+export const discard = async (store, ids) => {
+  const held = new Set(await store.keys());
+  const gone = ids.filter((id) => held.has(id));
+  for (const id of gone) await store.remove(id);
+  return gone.length;
 };

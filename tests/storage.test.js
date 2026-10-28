@@ -9,6 +9,9 @@ import {
   exportFilename,
   importJson,
   hasStoredDoc,
+  TRASH_KEY,
+  loadTrash,
+  saveTrash,
   LANGUAGE_KEY,
   loadLanguage,
   saveLanguage,
@@ -261,4 +264,20 @@ test('saveSeen stores the version, and is false for a storage that throws', () =
   assert.equal(saveSeen(storage, '1.2.3'), true);
   assert.equal(loadSeen(storage), '1.2.3');
   assert.equal(saveSeen(brokenStorage(), '1.2.3'), false);
+});
+
+test('loadTrash gives the stored ids and their times, and {} when there are none or they are not valid', () => {
+  assert.deepEqual(loadTrash(fakeStorage({ [TRASH_KEY]: '{"a":5,"b":7}' })), { a: 5, b: 7 });
+  assert.deepEqual(loadTrash(fakeStorage({ [TRASH_KEY]: '{"a":"x","b":7}' })), { b: 7 });
+  assert.deepEqual(loadTrash(fakeStorage({ [TRASH_KEY]: '[1]' })), {});
+  assert.deepEqual(loadTrash(fakeStorage({ [TRASH_KEY]: 'not json' })), {});
+  assert.deepEqual(loadTrash(fakeStorage()), {});
+  assert.deepEqual(loadTrash(brokenStorage()), {});
+});
+
+test('saveTrash stores the ids and their times, and is false for a storage that throws', () => {
+  const storage = fakeStorage();
+  assert.equal(saveTrash(storage, { a: 5 }), true);
+  assert.deepEqual(loadTrash(storage), { a: 5 });
+  assert.equal(saveTrash(brokenStorage(), { a: 5 }), false);
 });

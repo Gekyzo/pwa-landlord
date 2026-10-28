@@ -98,6 +98,28 @@ export const renderBalance = () => {
   $('expense-list').replaceChildren(...property.expenses.map((expense) => expenseRow(property.id, expense)));
 };
 
+// Saves the cost of the sheet; with a receipt, its blob first (DOC-7).
+const saveExpense = async () => {
+  const fields = {
+    title: $('expense-title').value,
+    amount: $('expense-amount').value,
+    date: $('expense-date').value,
+    kind: $('expense-kind').value,
+  };
+  const propertyId = ui.propertyId;
+  const id = crypto.randomUUID();
+  // The cost is checked before the blob is saved, so that a wrong field saves no file.
+  const checked = addExpense(state, propertyId, fields, id);
+  if (checked.error || !receipt) {
+    if (apply(checked)) closeExpenseSheet();
+    return;
+  }
+  const meta = await saveFile(receipt);
+  if (!meta) return;
+  const added = addExpense(state, propertyId, fields, id);
+  if (apply(added.error ? added : attachReceipt(added.state, propertyId, id, meta))) closeExpenseSheet();
+};
+
 export const bind = () => {
   $('expense-add').addEventListener('click', openExpenseSheet);
   $('expense-veil').addEventListener('click', closeExpenseSheet);
@@ -107,25 +129,16 @@ export const bind = () => {
     receipt = (await pickFile()) ?? receipt;
     showReceipt();
   });
+  // A second Save while the receipt is written would add the cost twice.
+  let saving = false;
   $('expense-form').addEventListener('submit', async (event) => {
     event.preventDefault();
-    const fields = {
-      title: $('expense-title').value,
-      amount: $('expense-amount').value,
-      date: $('expense-date').value,
-      kind: $('expense-kind').value,
-    };
-    const propertyId = ui.propertyId;
-    const id = crypto.randomUUID();
-    // The cost is checked before the blob is saved, so that a wrong field saves no file.
-    const checked = addExpense(state, propertyId, fields, id);
-    if (checked.error || !receipt) {
-      if (apply(checked)) closeExpenseSheet();
-      return;
+    if (saving) return;
+    saving = true;
+    try {
+      await saveExpense();
+    } finally {
+      saving = false;
     }
-    const meta = await saveFile(receipt);
-    if (!meta) return;
-    const added = addExpense(state, propertyId, fields, id);
-    if (apply(added.error ? added : attachReceipt(added.state, propertyId, id, meta))) closeExpenseSheet();
   });
 };

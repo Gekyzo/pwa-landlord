@@ -12,7 +12,10 @@ import {
   saveModules,
   loadOnboarded,
   hasStoredDoc,
+  loadTrash,
+  saveTrash,
 } from '#storage';
+import { droppedIds } from '#documents';
 import { LANGUAGES, resolveLanguage, translator } from '#i18n';
 import { shouldShow } from '#onboarding';
 
@@ -141,14 +144,24 @@ export const commit = (next) => {
   return saved;
 };
 
-// Applies a pure operation. `undoText` makes the change reversible for a few seconds.
-export const apply = (result, { undoText = null } = {}) => {
+// Puts the files that a change dropped in the trash, for the start of a later run (DOC-4).
+const trashDropped = (before, after) => {
+  const dropped = droppedIds(before, after);
+  if (!storage || dropped.length === 0) return;
+  const time = Date.now();
+  saveTrash(storage, { ...loadTrash(storage), ...Object.fromEntries(dropped.map((id) => [id, time])) });
+};
+
+// Applies a pure operation. `undoText` makes the change reversible for a few seconds. An import
+// passes `trash: false`: the files it drops stay, so a later import of the same data finds them.
+export const apply = (result, { undoText = null, trash = true } = {}) => {
   if (result.error) {
     showToast(textOf(result.error));
     return false;
   }
   const previous = state;
   const saved = commit(result.state);
+  if (saved && trash) trashDropped(previous, result.state);
   if (!saved) showToast(t('error.notSaved'));
   else if (undoText) showToast(undoText, { undo: previous });
   else hideToast();

@@ -12,6 +12,8 @@ import {
   attachReceipt,
   fileIds,
   formatSize,
+  droppedIds,
+  trashDue,
 } from '#documents';
 
 const property = (fields = {}) => ({
@@ -101,4 +103,19 @@ test('formatSize shows kilobytes below 1 MB and megabytes from there, in the lan
   assert.equal(formatSize(2048, 'en'), '2 kB');
   assert.equal(formatSize(1536 * 1024, 'en'), '1.5 MB');
   assert.equal(formatSize(1536 * 1024, 'es'), '1,5 MB');
+});
+
+test('droppedIds names the files of the state before that the state after does not name', () => {
+  const before = doc({ documents: [{ ...meta('a'), slot: 'gas' }, { ...meta('b'), slot: 'home' }] });
+  const after = removeDocument(before, 'p0', 'a').state;
+  assert.deepEqual(droppedIds(before, after), ['a']);
+  assert.deepEqual(droppedIds(after, before), []);
+  const replaced = addDocument(before, 'p0', 'home', meta('c')).state;
+  assert.deepEqual(droppedIds(before, replaced), ['b']);
+});
+
+test('trashDue removes the ids put in the trash up to the cutoff that no file names, and keeps the newer ones', () => {
+  const trash = { old: 100, named: 100, fresh: 900 };
+  assert.deepEqual(trashDue(trash, new Set(['named']), 500), { remove: ['old'], rest: { fresh: 900 } });
+  assert.deepEqual(trashDue({}, new Set(), 500), { remove: [], rest: {} });
 });

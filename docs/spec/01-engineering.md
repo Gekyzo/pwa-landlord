@@ -18,13 +18,13 @@
 | `src/contract.js` | The amounts in euros and the term of a contract (PROP-10, PROP-11) | nothing |
 | `src/balance.js` | The rent months, their payment and the extra costs of a property (BAL-1 to BAL-6) | `contract`, `properties` |
 | `src/documents.js` | The slots, the check of a file, the documents and the receipts of a property (DOC-1 to DOC-3) | `properties` |
-| `src/files.js` | The IndexedDB store of the blobs of the files, and the prune (DOC-4) | — |
+| `src/files.js` | The IndexedDB store of the blobs of the files, and the discard of some of them (DOC-4) | — |
 | `src/finances.js` | The mortgage months, the years, the finances of a year and the glance of a property (FIN-2 to FIN-4, PROP-13) | `contract`, `balance`, `properties` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `properties`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply`, which puts the dropped files in the trash | `properties`, `storage`, `documents`, `i18n`, `onboarding` |
 | `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
@@ -40,7 +40,7 @@
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
 | `src/ui/account.js` | The account screens and the group Account of Settings (ACC-1 to ACC-10) | `pocketbase`, `session`, `config`, `ui/context` |
-| `src/app.js` | Wires the views, the global keys, the service worker, the update check and the file store with its prune at the start | all of the above |
+| `src/app.js` | Wires the views, the global keys, the service worker, the update check and the file store with the trash emptied at the start | all of the above |
 
 ## Code rules
 
@@ -76,7 +76,8 @@
 The doc keys are in [07-properties.md](07-properties.md). The device preferences are `pwa-landlord.lang`,
 `pwa-landlord.hand`, `pwa-landlord.theme`, `pwa-landlord.modules` and `pwa-landlord.onboarded`. The account keeps `pwa-landlord.session` (ACC-5) and
 `pwa-landlord.offline` (ACC-10), and `pwa-landlord.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4).
-The blobs of the documents are in the IndexedDB database `pwa-landlord`, store `files` (DOC-4).
+The blobs of the documents are in the IndexedDB database `pwa-landlord`, store `files`, and the
+ids of the dropped ones in `pwa-landlord.file-trash` (DOC-4).
 
 ## Change guide
 
@@ -101,7 +102,7 @@ The blobs of the documents are in the IndexedDB database `pwa-landlord`, store `
 | `tests/contract.test.js` | The amounts and the term of a contract (PROP-10, PROP-11) |
 | `tests/balance.test.js` | The rent months, the balance, the payment and the extra costs (BAL-1 to BAL-6) |
 | `tests/documents.test.js` | The check of a file, the documents and the receipts (DOC-1 to DOC-3) |
-| `tests/files.test.js` | The prune and the open of the file store (DOC-4) |
+| `tests/files.test.js` | The discard and the open of the file store (DOC-4) |
 | `tests/finances.test.js` | The mortgage months, the years and the finances of a year (FIN-2 to FIN-4) |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6) |
 | `tests/session.test.js` | The session, the start route, the offline flag, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5, ACC-10) |

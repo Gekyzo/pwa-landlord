@@ -1,11 +1,12 @@
-import { $, ui, state, storage, t, setRender, setFiles, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
+import { $, ui, state, storage, t, UNDO_MS, setRender, setFiles, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindProperties, renderProperties, closePropertySheet } from '#ui/properties';
 import { bind as bindBalance, renderBalance, closeExpenseSheet } from '#ui/balance';
 import { bind as bindFinances, renderFinances } from '#ui/finances';
 import { renderDocuments } from '#ui/documents';
-import { openFiles, prune } from '#files';
-import { fileIds } from '#documents';
+import { openFiles, discard } from '#files';
+import { fileIds, trashDue } from '#documents';
+import { loadTrash, saveTrash } from '#storage';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -101,18 +102,26 @@ readVersion('./version.json').then((running) => {
   navigator.serviceWorker?.ready.then(offerUpdate).catch(() => {});
 });
 
-// The store of the files (DOC-4). The blobs that no file of the doc names go at each start, so an
-// undo in the session before always finds its blob. An empty doc prunes nothing: it may be one
-// that did not load (PROP-1).
+// The store of the files (DOC-4). At the start the blobs of the trash go, but only those dropped
+// before this run and longer ago than an undo lasts, so an undo, in this tab or another, finds its
+// blob. An import puts nothing in the trash, so it loses no file of this device.
+const started = Date.now();
+const emptyTrash = async (store) => {
+  if (!storage) return;
+  const { remove } = trashDue(loadTrash(storage), fileIds(state), started - 2 * UNDO_MS);
+  if (remove.length === 0) return;
+  await discard(store, remove);
+  // Read again: this run may have put new ids in the trash meanwhile.
+  const named = fileIds(state);
+  const rest = Object.entries(loadTrash(storage)).filter(([id]) => !remove.includes(id) && !named.has(id));
+  saveTrash(storage, Object.fromEntries(rest));
+};
 openFiles(window.indexedDB).then(async (store) => {
   let keys = [];
   if (store) {
-    try {
-      if (state.properties.length > 0) await prune(store, fileIds(state));
-      keys = await store.keys();
-    } catch {
-      // A store that cannot be read shows each file as missing; nothing is lost.
-    }
+    await emptyTrash(store).catch(() => {});
+    // A store that cannot be read shows each file as missing; nothing is lost.
+    keys = await store.keys().catch(() => []);
   }
   setFiles(store, new Set(keys));
   render();

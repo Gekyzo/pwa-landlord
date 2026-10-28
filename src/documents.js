@@ -67,3 +67,19 @@ export const formatSize = (bytes, tag) => {
   const value = mega ? bytes / 1024 / 1024 : Math.max(1, Math.round(bytes / 1024));
   return new Intl.NumberFormat(tag, { style: 'unit', unit: mega ? 'megabyte' : 'kilobyte', maximumFractionDigits: 1 }).format(value);
 };
+
+// The ids of the files that `before` names and `after` does not: a delete or a replace (DOC-4).
+export const droppedIds = (before, after) => {
+  const kept = fileIds(after);
+  return [...fileIds(before)].filter((id) => !kept.has(id));
+};
+
+// The trash maps an id to the time it was dropped. The ids dropped up to `cutoff` that no file
+// names again go; the newer ones stay, so an undo, in this tab or another, finds its blob.
+export const trashDue = (trash, named, cutoff) => {
+  const live = Object.entries(trash).filter(([id]) => !named.has(id));
+  return {
+    remove: live.filter(([, time]) => time <= cutoff).map(([id]) => id),
+    rest: Object.fromEntries(live.filter(([, time]) => time > cutoff)),
+  };
+};

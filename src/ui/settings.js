@@ -108,6 +108,6 @@ export const bind = () => {
     }
     const properties = t('properties.count', { count: result.state.properties.length });
     if (!window.confirm(t('import.confirm', { properties }))) return;
-    apply(result, { undoText: t('toast.imported') });
+    apply(result, { undoText: t('toast.imported'), trash: false });
   });
 };

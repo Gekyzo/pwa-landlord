@@ -31,8 +31,14 @@ cost, kept on the device. Its files are `src/documents.js`, `src/files.js`,
 - **DOC-4** The blobs are in the IndexedDB database `pwa-landlord`, version 1, store `files`, as
   `{ id, blob }`. `openFiles` gives `put`, `get`, `remove` and `keys`, or null with no IndexedDB
   or a refused open; a write waits for the end of its transaction, so a refused write (quota) is
-  an error. `prune` removes each blob whose id is not in a set and gives the count. A removed or
-  replaced file keeps its blob until the next start, so an undo finds it.
+  an error. `discard` removes the blobs of some ids and gives the count.
+- **DOC-8** A change that drops a file (`droppedIds`: a delete or a replace, of a file, a cost or a
+  property) puts its id in the trash, `pwa-landlord.file-trash`, with the time. An import puts
+  nothing in it, so the files of this device that the imported data does not name stay, and a
+  later import of data that names them finds them. At each start, after the store opens, the ids
+  of the trash dropped at least 10 seconds before the start that no file names again go
+  (`trashDue`), with their blobs; the newer ones stay. So an undo, in this tab or in another one,
+  always finds its blob.
 
 ## Screen
 
@@ -49,10 +55,9 @@ cost, kept on the device. Its files are `src/documents.js`, `src/files.js`,
   the metadata to the doc; a refused write is `error.fileNotSaved` and changes nothing. The first
   write of a run asks `navigator.storage.persist()`. A file whose blob is not in the store shows
   `documents.missing` in the danger colour in place of its size; it can be replaced or deleted. At
-  each start, after the store opens, `prune` removes the blobs that no file of the doc names
-  (`fileIds`); an empty doc prunes nothing, since it may be a doc that did not load.
+  each start the trash is emptied as DOC-8.
 - **DOC-7** The sheet of an extra cost has **Receipt**: the name of the picked file, or **None**,
   and **Attach**. **Save** checks the cost first, then writes the receipt as DOC-6, then saves the
-  cost with it. A cost with a receipt shows a paper-clip button that opens it. The JSON export
+  cost with it. A second **Save** while one runs does nothing. A cost with a receipt shows a paper-clip button that opens it. The JSON export
   holds the metadata only; Settings says so below **Backup** (`settings.exportNote`), and an
   import from another device shows its files as `documents.missing`.

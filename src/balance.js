@@ -72,7 +72,7 @@ export const addExpense = (state, id, fields, expenseId = crypto.randomUUID()) =
   update(state, id, (property) => {
     const { clean, error } = checkExpense(fields);
     if (error) return { error };
-    return { property: { ...property, expenses: [{ id: expenseId, ...clean }, ...property.expenses] } };
+    return { property: { ...property, expenses: [{ id: expenseId, ...clean, file: null }, ...property.expenses] } };
   });
 
 export const deleteExpense = (state, id, expenseId) =>

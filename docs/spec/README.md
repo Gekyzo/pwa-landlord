@@ -20,6 +20,7 @@ The names of the screen are the English ones; `src/locales/es.js` is the source 
 | [08-account.md](08-account.md) | Google sign-in, the approval gate and the offline choice |
 | [09-balance.md](09-balance.md) | The balance of a property: the rent months and the extra costs |
 | [10-finances.md](10-finances.md) | The finances of a property in a year: rent collected, costs and net |
+| [11-documents.md](11-documents.md) | The files of a property and the receipt of an extra cost |
 
 ## Rule identifiers
 
@@ -42,6 +43,7 @@ The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-desi
 | `ACC` | 08-account |
 | `BAL` | 09-balance |
 | `FIN` | 10-finances |
+| `DOC` | 11-documents |
 
 ## Words
 

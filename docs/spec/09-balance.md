@@ -9,9 +9,9 @@ files are `src/balance.js`, `src/ui/balance.js`, `tests/balance.test.js`, the `b
 ## Doc
 
 - **BAL-1** A property has `paid`, an object from a month `YYYY-MM` to the amount (PROP-11, not
-  `null`) that it was paid with, and `expenses`, a list of `{ id, title, amount, date, kind }`, newest
-  first: a title that is not blank, an amount that is not `null`, a real day and a kind of
-  `KINDS` (FIN-1).
+  `null`) that it was paid with, and `expenses`, a list of `{ id, title, amount, date, kind, file }`, newest
+  first: a title that is not blank, an amount that is not `null`, a real day, a kind of
+  `KINDS` (FIN-1) and a receipt (DOC-1) or `null`.
 
 ## Rules
 

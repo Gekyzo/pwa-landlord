@@ -15,9 +15,10 @@ const property = (fields = {}) => ({
   mortgage: null,
   paid: {},
   expenses: [],
+  documents: [],
   ...fields,
 });
-const doc = (fields) => ({ version: 4, properties: [property(fields)] });
+const doc = (fields) => ({ version: 5, properties: [property(fields)] });
 
 test('the rent months run from the start to today, newest first, each due on the start day', () => {
   assert.deepEqual(rentMonths(property(), '2026-03-30'), [
@@ -74,7 +75,7 @@ test('an extra cost is added first, trimmed and read', () => {
   const { state: next, error } = addExpense(state, 'p0', { title: ' Rubbish tax ', amount: '60,5', date: '2026-02-01' }, 'e');
   assert.equal(error, undefined);
   assert.deepEqual(next.properties[0].expenses, [
-    { id: 'e', title: 'Rubbish tax', amount: 6050, date: '2026-02-01', kind: 'other' },
+    { id: 'e', title: 'Rubbish tax', amount: 6050, date: '2026-02-01', kind: 'other', file: null },
     { id: 'old', title: 'Old', amount: 100, date: '2026-01-01' },
   ]);
   assert.equal(state.properties[0].expenses.length, 1);

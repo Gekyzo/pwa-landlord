@@ -11,8 +11,11 @@ export const COSTS = ['community', 'ibi', 'water', 'power', 'gas', 'rubbish', 'i
 export const PAYERS = ['owner', 'tenant'];
 // The kinds of an extra cost that the owner pays (FIN-1).
 export const KINDS = ['levy', 'ibi', 'tax', 'insurance', 'other'];
+// The places for the files of a property, in the order of the screen (DOC-1). `documents` owns
+// the rules of the files; the list is here because the doc check needs it.
+export const SLOTS = ['contract', 'home', 'insurance', 'power', 'gas'];
 
-export const emptyProperties = () => ({ version: 4, properties: [] });
+export const emptyProperties = () => ({ version: 5, properties: [] });
 
 const missing = (state) => ({ state, error: { key: 'error.propertyMissing' } });
 
@@ -63,7 +66,7 @@ export const findProperty = (state, id) => state.properties.find((property) => p
 export const addProperty = (state, fields, id = crypto.randomUUID()) => {
   const { clean, error } = checkFields(fields);
   if (error) return { state, error };
-  return { state: { ...state, properties: [{ id, ...clean, paid: {}, expenses: [] }, ...state.properties] } };
+  return { state: { ...state, properties: [{ id, ...clean, paid: {}, expenses: [], documents: [] }, ...state.properties] } };
 };
 
 // The fields replace every field of the summary: the sheet sends them all. The balance stays.
@@ -96,9 +99,19 @@ const isText = (value) => typeof value === 'string';
 const isAmount = (value) => value === null || (Number.isInteger(value) && value >= 0 && value <= MAX_AMOUNT);
 
 const isMonth = (key) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key);
+const isFile = (file) =>
+  isObject(file) &&
+  typeof file.id === 'string' &&
+  file.id !== '' &&
+  typeof file.name === 'string' &&
+  file.name.trim() !== '' &&
+  Number.isInteger(file.size) &&
+  file.size > 0 &&
+  isDate(file.added);
 const isExpense = (expense, version) =>
   isObject(expense) &&
   (version < 4 || KINDS.includes(expense.kind)) &&
+  (version < 5 || expense.file === null || isFile(expense.file)) &&
   typeof expense.id === 'string' &&
   expense.id !== '' &&
   typeof expense.title === 'string' &&
@@ -136,14 +149,18 @@ const validProperty = (property, version) =>
       optional(property.deposit, isAmount) &&
       optional(property.costs, (costs) => isObject(costs) && !Array.isArray(costs)) &&
       (version === 2 || validBalance(property, version)) &&
-      (version < 4 || optional(property.mortgage, isMortgage))));
+      (version < 4 || optional(property.mortgage, isMortgage)) &&
+      (version < 5 ||
+        optional(property.documents, (list) => Array.isArray(list) && list.every((file) => isFile(file) && SLOTS.includes(file.slot))))));
 
-// A clean version 4 doc, or null. An older doc migrates: a version 1 property gets the empty facts
-// of a contract, a version 1 or 2 property an empty balance, and a version 1 to 3 property no
-// mortgage, with each extra cost of kind `other` (PROP-2). Add a migration here when the version
-// goes up.
+const cleanFile = ({ id, name, size, added }) => ({ id, name: name.trim(), size, added });
+
+// A clean version 5 doc, or null. An older doc migrates: a version 1 property gets the empty facts
+// of a contract, a version 1 or 2 property an empty balance, a version 1 to 3 property no
+// mortgage, with each extra cost of kind `other`, and a version 1 to 4 property no documents,
+// with no receipt on each extra cost (PROP-2). Add a migration here when the version goes up.
 export const normalizeProperties = (data) => {
-  if (!isObject(data) || ![1, 2, 3, 4].includes(data.version) || !Array.isArray(data.properties)) return null;
+  if (!isObject(data) || ![1, 2, 3, 4, 5].includes(data.version) || !Array.isArray(data.properties)) return null;
   if (!data.properties.every((property) => validProperty(property, data.version))) return null;
   const properties = data.properties.map((property) => ({
     id: property.id,
@@ -157,14 +174,16 @@ export const normalizeProperties = (data) => {
     costs: cleanCosts(property.costs),
     mortgage: property.mortgage ? { amount: property.mortgage.amount, start: property.mortgage.start, end: property.mortgage.end } : null,
     paid: { ...property.paid },
-    expenses: (property.expenses ?? []).map(({ id, title, amount, date, kind = 'other' }) => ({
+    expenses: (property.expenses ?? []).map(({ id, title, amount, date, kind = 'other', file = null }) => ({
       id,
       title: title.trim(),
       amount,
       date,
       kind,
+      file: file && cleanFile(file),
     })),
+    documents: (property.documents ?? []).map((file) => ({ ...cleanFile(file), slot: file.slot })),
   }));
   if (new Set(properties.map((property) => property.id)).size !== properties.length) return null;
-  return { version: 4, properties };
+  return { version: 5, properties };
 };

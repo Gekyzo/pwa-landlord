@@ -4,6 +4,10 @@ User-visible changes, newest first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.2 - 2026-10-28
+
 - Four width classes, as in `pwa-shopping-list` (DSV-5, DSV-6, NAV-3, NAV-4, SET-1): phone below 600px unchanged; from 600px the rail stands at the start with either hand and the add is **Add property** in the header; from 840px a sheet with a head is a card at the end of the content and Settings is two columns; from 1024px the app stands in a frame of at most 1280px with a 232px sidebar (the app mark, the count of properties, **No account** with no session). `tests/design.test.js` runs DS-8 without the 1024px query. The screen-reader text of `.version-status` no longer makes the page scroll.
 - The documents of a property (DOC-1 to DOC-7, `docs/spec/11-documents.md`): PDF, JPEG or PNG files of up to 10 MB in five slots (rental contract, home insurance, other insurances, power contract, gas contract) and a receipt on each extra cost. The blobs live in IndexedDB (`pwa-landlord`/`files`, `src/files.js`); the doc, version 5, keeps their data only (`src/documents.js`, `src/ui/documents.js`). A delete has undo; a delete or a replace puts the file in a trash (`pwa-landlord.file-trash`), and a later start removes its blob after the undo time. An import puts nothing in the trash, so it loses no file of the device. A file whose blob is missing shows **Not on this device**. The JSON export holds the data only, and Settings says so. Icons `clip` and `file`. The shell cache is `pwa-landlord-shell-v6`.
 - At a glance (PROP-13): each row of the property list shows, below the name, the unpaid rent of every year in the danger colour and the net of the current year. `glanceOf` in `src/finances.js`; no line for a property with no rent month, no extra cost and no mortgage.

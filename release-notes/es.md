@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.2.2 - 2026-10-28
+
 - En tableta y ordenador la app aprovecha la pantalla: barra lateral con el nombre de la app, botón Añadir vivienda arriba, fichas como tarjeta a la derecha y Ajustes en dos columnas.
 - Guarda en el dispositivo los PDF y las fotos de cada vivienda: el contrato de alquiler, los seguros y los contratos de luz y gas. Cada gasto puede llevar su recibo. La copia exportada no incluye los archivos.
 - La lista de viviendas muestra debajo de cada nombre lo que debe el inquilino, en rojo, y el neto de este año.

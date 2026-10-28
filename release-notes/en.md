@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.2 - 2026-10-28
+
 - On a tablet or a computer the app uses the screen: a sidebar with the name of the app, Add property at the top, the sheets as a card at the right and Settings in two columns.
 - Keep the PDFs and photos of each property on the device: the rental contract, the insurances and the power and gas contracts. Each cost can carry its receipt. The export does not include the files.
 - The property list shows, below each name, what the tenant owes, in red, and the net of this year.

@@ -31,6 +31,7 @@ const SHELL = [
   './src/particles.js',
   './src/onboarding.js',
   './src/properties.js',
+  './src/contract.js',
   './src/install.js',
   './src/sections.js',
   './src/modules.js',

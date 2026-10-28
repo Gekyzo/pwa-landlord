@@ -1,7 +1,7 @@
 # Properties
 
-The houses under management. Its files are `src/properties.js`, `src/ui/properties.js`,
-`tests/properties.test.js`, the `properties.*`, `row.delete`, `toast.propertyDeleted`,
+The houses under management. Its files are `src/properties.js`, `src/contract.js`,
+`src/ui/properties.js`, `tests/properties.test.js`, `tests/contract.test.js`, the `properties.*`, `row.delete`, `toast.propertyDeleted`,
 `toast.order`, `error.name*`, `error.address*` and `error.propertyMissing` keys of the catalogs,
 the `#properties` section and the `#property-sheet` of `index.html`.
 
@@ -39,3 +39,16 @@ the `#properties` section and the `#property-sheet` of `index.html`.
   the head closes it with no save.
 - **PROP-9** A row slides left to show **Delete**. A hold of a finger, or a vertical drag of the
   mouse, lifts the row and moves it in the list (PROP-6).
+
+## Contract
+
+- **PROP-10** The term of a contract is 1 year, extended a year at a time up to 5 years.
+  `contractTerm(start, today)` gives the year of contract that holds `today` (1 to 5), the day it
+  ends, the day of the 5-year limit and whether that day is past. A start that is not a real day
+  `YYYY-MM-DD` gives no term. A year after February 29 is February 28. The rule takes `today`; only
+  the view reads the clock.
+- **PROP-11** An amount is integer cents in euros, from 0 to 100 000 000. `parseAmount` reads a
+  text: a space and `€` are ignored, the last `.` or `,` with 1 or 2 digits after it is the decimal
+  mark, and another separator groups the digits by 3. An empty text is no amount. Another text is
+  `error.amountInvalid`; more than 1 000 000 € is `error.amountTooLarge`. `formatAmount` shows it
+  in euros in the language of the page.

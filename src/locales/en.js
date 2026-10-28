@@ -84,4 +84,6 @@ export default {
   'error.nameTooLong': 'The name has at most {max} characters.',
   'error.addressTooLong': 'The address has at most {max} characters.',
   'error.propertyMissing': 'The property no longer exists.',
+  'error.amountInvalid': 'Type an amount, such as 850 or 850.50.',
+  'error.amountTooLarge': 'The amount is at most €{max}.',
 };

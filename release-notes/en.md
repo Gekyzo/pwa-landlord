@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- Each property keeps its contract: owner, tenant, start date, monthly rent, deposit and who pays each cost (community fees, IBI, water, power, gas, rubbish and internet). The detail shows when the current year ends and the 5-year limit.
 
 ## 0.2.1 - 2026-10-25
 

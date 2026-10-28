@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, isDate, addYears, contractTerm } from '#contract';
+import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, amountText, isDate, addYears, contractTerm } from '#contract';
 
 test('an empty amount is null', () => {
   for (const text of [undefined, null, '', '   ', ' € ']) assert.deepEqual(parseAmount(text, 'rent'), { cents: null });
@@ -39,6 +39,16 @@ test('an amount over the maximum is an error', () => {
 test('an amount shows in euros in the language of the page', () => {
   assert.equal(formatAmount(120050, 'en'), '€1,200.50');
   assert.match(formatAmount(1234550, 'es'), /^12\.345,50\s€$/);
+});
+
+test('an amount shows to edit with no currency and no groups, and reads back the same', () => {
+  assert.equal(amountText(null, 'es'), '');
+  assert.equal(amountText(120000, 'es'), '1200');
+  assert.equal(amountText(120050, 'es'), '1200,50');
+  assert.equal(amountText(120050, 'en'), '1200.50');
+  for (const tag of ['es', 'en']) {
+    for (const cents of [0, 5, 85050, 120000, 100_000_000]) assert.deepEqual(parseAmount(amountText(cents, tag), 'rent'), { cents });
+  }
 });
 
 test('a date is a real day in the form YYYY-MM-DD', () => {

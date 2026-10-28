@@ -1,17 +1,33 @@
-import { addProperty, editProperty, deleteProperty, findProperty } from '#properties';
+import { COSTS, PAYERS, addProperty, editProperty, deleteProperty, findProperty } from '#properties';
+import { TERM_YEARS, amountText, contractTerm, formatAmount } from '#contract';
+import { intlTag } from '#i18n';
 import { bindSheetDrag } from '#ds/sheet';
 import { settle } from '#swipe';
-import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, apply, render, guardClick } from '#ui/context';
+import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, lang, apply, render, guardClick } from '#ui/context';
 import { iconButton } from '#ui/controls';
 import { reorder, bindReorder } from '#ui/drag';
+
+const TEXTS = ['name', 'address', 'owner', 'tenant', 'start'];
+const AMOUNTS = ['rent', 'deposit'];
+
+// One select for each cost, built at each opening so that its texts follow the language.
+const costField = (cost, payer = '') => {
+  const select = el('select', { className: 'select field-input', id: `property-cost-${cost}` }, [
+    el('option', { value: '', textContent: t('properties.payer.none') }),
+    ...PAYERS.map((value) => el('option', { value, textContent: t(`properties.payer.${value}`) })),
+  ]);
+  select.value = payer;
+  return el('label', { className: 'field' }, [select, el('span', { className: 'field-label', textContent: t(`cost.${cost}`) })]);
+};
 
 const openSheet = (id = null) => {
   const property = id ? findProperty(state, id) : null;
   ui.sheetOpen = true;
   ui.editing = id;
   $('property-sheet-title').textContent = t(id ? 'properties.editTitle' : 'properties.new');
-  $('property-name').value = property?.name ?? '';
-  $('property-address').value = property?.address ?? '';
+  for (const field of TEXTS) $(`property-${field}`).value = property?.[field] ?? '';
+  for (const field of AMOUNTS) $(`property-${field}`).value = amountText(property?.[field] ?? null, intlTag(lang));
+  $('property-cost-fields').replaceChildren(...COSTS.map((cost) => costField(cost, property?.costs[cost])));
   render();
   $('property-name').focus();
 };
@@ -101,6 +117,53 @@ const row = (property) => {
   return node;
 };
 
+// The local day of the device, as the contract term reads it (PROP-10).
+const today = () => {
+  const now = new Date();
+  return [now.getFullYear(), now.getMonth() + 1, now.getDate()].map((n, i) => String(n).padStart(i ? 2 : 4, '0')).join('-');
+};
+
+const formatDate = (date) => new Date(`${date}T12:00:00`).toLocaleDateString(intlTag(lang), { dateStyle: 'medium' });
+
+// The filled facts of the contract, as pairs of a name and a value.
+const factsOf = (property) => {
+  const tag = intlTag(lang);
+  const term = contractTerm(property.start, today());
+  return [
+    ['properties.owner', property.owner],
+    ['properties.tenant', property.tenant],
+    ['properties.start', property.start && formatDate(property.start)],
+    term && !term.ended && ['properties.end', t('properties.endValue', { date: formatDate(term.end), year: term.year, years: TERM_YEARS })],
+    term && [term.ended ? 'properties.ended' : 'properties.final', formatDate(term.final)],
+    ['properties.rent', property.rent !== null && formatAmount(property.rent, tag)],
+    ['properties.deposit', property.deposit !== null && formatAmount(property.deposit, tag)],
+  ].filter((fact) => fact && fact[1]);
+};
+
+const costsOf = (property, payer) => {
+  const names = COSTS.filter((cost) => property.costs[cost] === payer).map((cost) => t(`cost.${cost}`));
+  return names.length ? new Intl.ListFormat(intlTag(lang), { type: 'conjunction' }).format(names) : '';
+};
+
+const renderFacts = (property) => {
+  const facts = property ? factsOf(property) : [];
+  $('property-facts').replaceChildren(
+    ...facts.map(([key, value]) =>
+      el('div', { className: 'property-fact' }, [
+        el('dt', { textContent: t(key, { years: TERM_YEARS }) }),
+        el('dd', { textContent: value }),
+      ]),
+    ),
+  );
+  $('property-facts').hidden = facts.length === 0;
+  for (const payer of PAYERS) {
+    const costs = property ? costsOf(property, payer) : '';
+    const node = $(`property-costs-${payer}`);
+    node.textContent = costs && t(payer === 'owner' ? 'properties.costsOwner' : 'properties.costsTenant', { costs });
+    node.hidden = !costs;
+  }
+};
+
 export const renderProperties = () => {
   const visible = ui.view === 'properties';
   $('properties').hidden = !visible;
@@ -117,6 +180,7 @@ export const renderProperties = () => {
   $('property-detail-name').textContent = property?.name ?? '';
   $('property-detail-address').textContent = property?.address ?? '';
   $('property-detail-address').hidden = !property?.address;
+  renderFacts(property);
   $('property-detail-empty').hidden = Boolean(property);
   $('property-actions').hidden = !property;
   $('property-sheet').hidden = !ui.sheetOpen;
@@ -133,7 +197,8 @@ export const bind = () => {
   $('property-delete').addEventListener('click', () => remove(ui.propertyId));
   $('property-form').addEventListener('submit', (event) => {
     event.preventDefault();
-    const fields = { name: $('property-name').value, address: $('property-address').value };
+    const fields = Object.fromEntries([...TEXTS, ...AMOUNTS].map((field) => [field, $(`property-${field}`).value]));
+    fields.costs = Object.fromEntries(COSTS.map((cost) => [cost, $(`property-cost-${cost}`).value]));
     const result = ui.editing ? editProperty(state, ui.editing, fields) : addProperty(state, fields);
     if (apply(result)) closePropertySheet();
   });

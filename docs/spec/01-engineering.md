@@ -26,7 +26,7 @@
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/drag`, `ui/update`, `ui/dust` |
-| `src/ui/properties.js` | The Properties section, its rows and its sheet | `ds/sheet`, `properties`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
+| `src/ui/properties.js` | The Properties section, its rows, its summary and its sheet | `ds/sheet`, `properties`, `contract`, `i18n`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/drag.js` | The hold and move of a row (optional) | `properties`, `reorder`, `ui/context`, `ui/motion` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |

@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- Cada vivienda guarda el contrato: propietario, inquilino, fecha de inicio, mensualidad, fianza y quién paga cada gasto (comunidad, IBI, agua, luz, gas, basuras e internet). La ficha muestra cuándo acaba el año en curso y el límite de 5 años.
 
 ## 0.2.1 - 2026-10-25
 

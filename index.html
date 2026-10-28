@@ -39,6 +39,9 @@
           <p id="property-detail-empty" class="empty-state inline" data-i18n="properties.pick"></p>
           <h2 id="property-detail-name" class="property-name"></h2>
           <p id="property-detail-address" class="property-address"></p>
+          <dl id="property-facts" class="property-facts"></dl>
+          <p id="property-costs-owner" class="property-costs"></p>
+          <p id="property-costs-tenant" class="property-costs"></p>
           <div id="property-actions" class="cluster">
             <button id="property-edit" class="button outline" type="button" data-i18n="properties.edit"></button>
             <button id="property-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="properties.delete"></span></button>
@@ -133,6 +136,13 @@
         <div class="sheet-body">
           <label class="field"><input id="property-name" class="input field-input" type="text" maxlength="80" required data-i18n-attr="placeholder:properties.name"><span class="field-label" data-i18n="properties.name"></span></label>
           <label class="field"><input id="property-address" class="input field-input" type="text" maxlength="200" data-i18n-attr="placeholder:properties.address"><span class="field-label" data-i18n="properties.address"></span></label>
+          <label class="field"><input id="property-owner" class="input field-input" type="text" maxlength="120" data-i18n-attr="placeholder:properties.owner"><span class="field-label" data-i18n="properties.owner"></span></label>
+          <label class="field"><input id="property-tenant" class="input field-input" type="text" maxlength="120" data-i18n-attr="placeholder:properties.tenant"><span class="field-label" data-i18n="properties.tenant"></span></label>
+          <label class="field"><input id="property-start" class="input field-input" type="date"><span class="field-label" data-i18n="properties.start"></span></label>
+          <label class="field"><input id="property-rent" class="input field-input" type="text" inputmode="decimal" data-i18n-attr="placeholder:properties.rent"><span class="field-label" data-i18n="properties.rent"></span></label>
+          <label class="field"><input id="property-deposit" class="input field-input" type="text" inputmode="decimal" data-i18n-attr="placeholder:properties.deposit"><span class="field-label" data-i18n="properties.deposit"></span></label>
+          <h3 class="sheet-title part" data-i18n="properties.costs"></h3>
+          <div id="property-cost-fields"></div>
         </div>
         <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
       </form>

@@ -159,10 +159,13 @@
 
   /* @component property
      @scope properties
-     @summary The detail of one property: its name, then its address.
+     @summary The detail of one property: its name, its address, the facts of its contract and who pays each cost.
      @part property-name     The name, as the head of the detail.
      @part property-address  The address, in second text; hidden when empty.
-     @example <article class="pane-detail"><h2 class="property-name">Flat 2B</h2><p class="property-address">Main Street 4, Madrid</p></article> */
+     @part property-facts    The list of the filled facts of the contract.
+     @part property-fact     One fact: its name in second text, its value at the end.
+     @part property-costs    A line of the costs that one side pays.
+     @example <article class="pane-detail"><h2 class="property-name">Flat 2B</h2><p class="property-address">Main Street 4, Madrid</p><dl class="property-facts"><div class="property-fact"><dt>Tenant</dt><dd>Luis Gil</dd></div><div class="property-fact"><dt>Monthly rent</dt><dd>€850.00</dd></div></dl><p class="property-costs">Paid by the owner: IBI and community fees.</p></article> */
   .property-name {
     margin: 0 0 var(--space-2);
     font-size: var(--text-h);
@@ -172,6 +175,46 @@
   .property-address {
     margin: 0 0 var(--space-4);
     color: var(--muted);
+  }
+
+  .property-facts {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+  }
+
+  .property-fact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .property-fact dt {
+    color: var(--muted);
+  }
+
+  .property-fact dd {
+    margin: 0;
+    font-weight: var(--weight-medium);
+  }
+
+  .property-costs {
+    margin: 0 0 var(--space-4);
+  }
+
+  /* A select of the sheet takes the border of a field, as an input does. */
+  .field .select {
+    min-height: var(--tap);
+    border: 2px solid var(--control);
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+  }
+
+  .field .select:focus {
+    border-color: var(--text);
   }
 
   /* @component about

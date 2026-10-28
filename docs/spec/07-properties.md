@@ -44,9 +44,12 @@ the `#properties` section and the `#property-sheet` of `index.html`.
 - **PROP-8** The Properties section lists the properties by name. With no property it shows
   `properties.empty` and **Add property**. **+** and **Add property** open the sheet of a new
   property; a tap on a row opens its detail (LAY-3): the name, the address when there is one,
-  **Edit** and **Delete**. The head of the sheet has the title and **Close**; its body has
-  **Name** and **Address**; its foot has **Save**. **Close**, a tap on the veil or a drag down of
-  the head closes it with no save.
+  the summary (PROP-12), **Edit** and **Delete**. The head of the sheet has the title and
+  **Close**; its body has **Name**, **Address**, **Owner**, **Tenant**, **Contract start** (a date
+  picker), **Monthly rent**, **Deposit**, then the part **Costs** with one select for each cost of
+  `COSTS`: **Not assigned**, **Owner** or **Tenant**; its foot has **Save**. An amount shows in the
+  sheet with no currency and no groups. **Close**, a tap on the veil or a drag down of the head
+  closes it with no save.
 - **PROP-9** A row slides left to show **Delete**. A hold of a finger, or a vertical drag of the
   mouse, lifts the row and moves it in the list (PROP-6).
 
@@ -63,3 +66,9 @@ the `#properties` section and the `#property-sheet` of `index.html`.
   `error.rentInvalid` or `error.depositInvalid`; more than 1 000 000 € is `error.rentTooLarge` or
   `error.depositTooLarge`. `formatAmount` shows it
   in euros in the language of the page.
+- **PROP-12** The summary of a property lists only its filled facts, each with its name: owner,
+  tenant, contract start, the end of the current year with "year N of 5" (while the contract has
+  not ended), the 5-year limit (**Contract ended** once it is past), monthly rent and deposit.
+  Dates show in the medium style of the language, amounts in euros (PROP-11). Below the list, one
+  line names the costs that the owner pays and one the costs that the tenant pays; a line with no
+  cost is hidden. The view reads today from the clock of the device, as a local day.

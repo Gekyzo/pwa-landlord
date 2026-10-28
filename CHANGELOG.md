@@ -4,7 +4,7 @@ User-visible changes, newest first.
 
 ## Unreleased
 
-No change.
+- The summary of a property (PROP-1 to PROP-4, PROP-8, PROP-10 to PROP-12): owner, tenant, contract start, monthly rent, deposit and the payer of each running cost, in the sheet and in the detail. The detail derives the end of the current year of contract and the 5-year limit (1 year, extended a year at a time up to 5). New pure module `src/contract.js`. The doc goes to version 2; a version 1 doc or export migrates. The shell cache is `pwa-landlord-shell-v3`.
 
 ## 0.2.1 - 2026-10-25
 

@@ -26,6 +26,12 @@ export const parseAmount = (text, field) => {
 export const formatAmount = (cents, tag) =>
   new Intl.NumberFormat(tag, { style: 'currency', currency: 'EUR' }).format(cents / 100);
 
+// The amount as the sheet shows it to edit: no currency and no groups, so parseAmount reads it again.
+export const amountText = (cents, tag) =>
+  cents === null
+    ? ''
+    : new Intl.NumberFormat(tag, { useGrouping: false, minimumFractionDigits: cents % 100 ? 2 : 0 }).format(cents / 100);
+
 const partsOf = (text) => text.split('-').map(Number);
 const daysIn = (year, month) => new Date(Date.UTC(year, month, 0)).getUTCDate();
 const pad = (n, size = 2) => String(n).padStart(size, '0');

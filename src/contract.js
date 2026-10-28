@@ -49,6 +49,15 @@ export const addYears = (date, years) => {
   return `${pad(target, 4)}-${pad(month)}-${pad(Math.min(day, daysIn(target, month)))}`;
 };
 
+// The day of the date in a month `months` later; a day that the month does not have becomes its
+// last day. Each step counts from the given date, so the day never drifts.
+export const addMonths = (date, months) => {
+  const [year, month, day] = partsOf(date);
+  const index = year * 12 + (month - 1) + months;
+  const [targetYear, targetMonth] = [Math.floor(index / 12), (index % 12) + 1];
+  return `${pad(targetYear, 4)}-${pad(targetMonth)}-${pad(Math.min(day, daysIn(targetYear, targetMonth)))}`;
+};
+
 // The year of contract that holds `today` (1 to TERM_YEARS), the day it ends, the day of the
 // last end, and whether that day is past. Null with no valid start. Dates compare as text.
 export const contractTerm = (start, today) => {

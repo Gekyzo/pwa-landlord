@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, amountText, isDate, addYears, contractTerm } from '#contract';
+import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, amountText, isDate, addYears, addMonths, contractTerm } from '#contract';
 
 test('an empty amount is null', () => {
   for (const text of [undefined, null, '', '   ', ' € ']) assert.deepEqual(parseAmount(text, 'rent'), { cents: null });
@@ -62,6 +62,16 @@ test('a year is added to a date, and February 29 becomes February 28', () => {
   assert.equal(addYears('2026-03-15', 1), '2027-03-15');
   assert.equal(addYears('2024-02-29', 1), '2025-02-28');
   assert.equal(addYears('2024-02-29', 4), '2028-02-29');
+});
+
+test('months are added to a date, and a day that the month does not have becomes its last day', () => {
+  assert.equal(addMonths('2026-03-15', 0), '2026-03-15');
+  assert.equal(addMonths('2026-03-15', 1), '2026-04-15');
+  assert.equal(addMonths('2026-11-15', 2), '2027-01-15');
+  assert.equal(addMonths('2026-01-31', 1), '2026-02-28');
+  assert.equal(addMonths('2024-01-31', 1), '2024-02-29');
+  assert.equal(addMonths('2026-01-31', 2), '2026-03-31');
+  assert.equal(addMonths('2026-03-15', 59), '2031-02-15');
 });
 
 test('the term is one year, extended a year at a time up to five', () => {

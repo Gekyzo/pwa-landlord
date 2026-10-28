@@ -10,7 +10,7 @@ export const MAX_PERSON = 120;
 export const COSTS = ['community', 'ibi', 'water', 'power', 'gas', 'rubbish', 'internet'];
 export const PAYERS = ['owner', 'tenant'];
 
-export const emptyProperties = () => ({ version: 2, properties: [] });
+export const emptyProperties = () => ({ version: 3, properties: [] });
 
 const missing = (state) => ({ state, error: { key: 'error.propertyMissing' } });
 
@@ -46,16 +46,16 @@ export const findProperty = (state, id) => state.properties.find((property) => p
 export const addProperty = (state, fields, id = crypto.randomUUID()) => {
   const { clean, error } = checkFields(fields);
   if (error) return { state, error };
-  return { state: { ...state, properties: [{ id, ...clean }, ...state.properties] } };
+  return { state: { ...state, properties: [{ id, ...clean, paid: {}, expenses: [] }, ...state.properties] } };
 };
 
-// The fields replace every field of the property but its id: the sheet sends them all.
+// The fields replace every field of the summary: the sheet sends them all. The balance stays.
 export const editProperty = (state, id, fields) => {
   if (!findProperty(state, id)) return missing(state);
   const { clean, error } = checkFields(fields);
   if (error) return { state, error };
   return {
-    state: { ...state, properties: state.properties.map((property) => (property.id === id ? { id, ...clean } : property)) },
+    state: { ...state, properties: state.properties.map((property) => (property.id === id ? { ...property, ...clean } : property)) },
   };
 };
 
@@ -78,6 +78,23 @@ const optional = (value, check) => value === undefined || check(value);
 const isText = (value) => typeof value === 'string';
 const isAmount = (value) => value === null || (Number.isInteger(value) && value >= 0 && value <= MAX_AMOUNT);
 
+const isMonth = (key) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key);
+const isExpense = (expense) =>
+  isObject(expense) &&
+  typeof expense.id === 'string' &&
+  expense.id !== '' &&
+  typeof expense.title === 'string' &&
+  expense.title.trim() !== '' &&
+  isAmount(expense.amount) &&
+  expense.amount !== null &&
+  isDate(expense.date);
+const isPaid = (paid) =>
+  isObject(paid) &&
+  !Array.isArray(paid) &&
+  Object.entries(paid).every(([month, cents]) => isMonth(month) && isAmount(cents) && cents !== null);
+const validBalance = ({ paid, expenses }) =>
+  optional(paid, isPaid) && optional(expenses, (list) => Array.isArray(list) && list.every(isExpense));
+
 const validProperty = (property, version) =>
   isObject(property) &&
   typeof property.id === 'string' &&
@@ -91,12 +108,14 @@ const validProperty = (property, version) =>
       optional(property.start, (start) => start === '' || isDate(start)) &&
       optional(property.rent, isAmount) &&
       optional(property.deposit, isAmount) &&
-      optional(property.costs, (costs) => isObject(costs) && !Array.isArray(costs))));
+      optional(property.costs, (costs) => isObject(costs) && !Array.isArray(costs)) &&
+      (version === 2 || validBalance(property))));
 
-// A clean version 2 doc, or null. A version 1 doc migrates: its properties get the empty facts of
-// a contract (PROP-2). Add a migration here when the version goes up.
+// A clean version 3 doc, or null. An older doc migrates: a version 1 property gets the empty facts
+// of a contract, and a version 1 or 2 property an empty balance (PROP-2). Add a migration here
+// when the version goes up.
 export const normalizeProperties = (data) => {
-  if (!isObject(data) || ![1, 2].includes(data.version) || !Array.isArray(data.properties)) return null;
+  if (!isObject(data) || ![1, 2, 3].includes(data.version) || !Array.isArray(data.properties)) return null;
   if (!data.properties.every((property) => validProperty(property, data.version))) return null;
   const properties = data.properties.map((property) => ({
     id: property.id,
@@ -108,7 +127,9 @@ export const normalizeProperties = (data) => {
     rent: property.rent ?? null,
     deposit: property.deposit ?? null,
     costs: cleanCosts(property.costs),
+    paid: { ...property.paid },
+    expenses: (property.expenses ?? []).map(({ id, title, amount, date }) => ({ id, title: title.trim(), amount, date })),
   }));
   if (new Set(properties.map((property) => property.id)).size !== properties.length) return null;
-  return { version: 2, properties };
+  return { version: 3, properties };
 };

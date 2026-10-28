@@ -1,4 +1,4 @@
-const CACHE = 'pwa-landlord-shell-v3';
+const CACHE = 'pwa-landlord-shell-v4';
 
 const SHELL = [
   './',
@@ -32,6 +32,7 @@ const SHELL = [
   './src/onboarding.js',
   './src/properties.js',
   './src/contract.js',
+  './src/balance.js',
   './src/install.js',
   './src/sections.js',
   './src/modules.js',

@@ -16,9 +16,9 @@ import {
   findProperty,
 } from '#properties';
 
-const BLANK = { owner: '', tenant: '', start: '', rent: null, deposit: null, costs: {} };
+const BLANK = { owner: '', tenant: '', start: '', rent: null, deposit: null, costs: {}, paid: {}, expenses: [] };
 const blank = (id, name, address = '') => ({ id, name, address, ...BLANK });
-const build = (...names) => ({ version: 2, properties: names.map((name, i) => blank(`p${i}`, name)) });
+const build = (...names) => ({ version: 3, properties: names.map((name, i) => blank(`p${i}`, name)) });
 
 test('the key of the properties has the slug', () => {
   assert.equal(PROPERTIES_KEY, `${APP_SLUG}.properties`);
@@ -158,8 +158,27 @@ test('normalizeProperties migrates a version 1 doc, so nothing is lost', () => {
         { id: 'b', name: 'z' },
       ],
     }),
-    { version: 2, properties: [blank('a', 'x', 'y'), blank('b', 'z')] },
+    { version: 3, properties: [blank('a', 'x', 'y'), blank('b', 'z')] },
   );
+});
+
+test('an edit keeps the balance of the property', () => {
+  const expenses = [{ id: 'e', title: 'Tax', amount: 100, date: '2026-01-01' }];
+  const state = { version: 3, properties: [{ ...blank('p0', 'a'), paid: { '2026-01': 100 }, expenses }] };
+  const { state: next } = editProperty(state, 'p0', { name: 'b' });
+  assert.deepEqual(next.properties[0], { ...blank('p0', 'b'), paid: { '2026-01': 100 }, expenses });
+});
+
+test('normalizeProperties keeps a valid version 3 doc with its balance', () => {
+  const property = {
+    ...blank('a', 'x'),
+    paid: { '2026-01': 80000 },
+    expenses: [{ id: 'e', title: ' Tax ', amount: 100, date: '2026-01-01', more: 1 }],
+  };
+  assert.deepEqual(normalizeProperties({ version: 3, properties: [property] }), {
+    version: 3,
+    properties: [{ ...property, expenses: [{ id: 'e', title: 'Tax', amount: 100, date: '2026-01-01' }] }],
+  });
 });
 
 test('normalizeProperties keeps a valid version 2 doc and drops what it does not know', () => {
@@ -176,7 +195,7 @@ test('normalizeProperties keeps a valid version 2 doc and drops what it does not
     more: 1,
   };
   assert.deepEqual(normalizeProperties({ version: 2, properties: [property, { id: 'b', name: 'z' }] }), {
-    version: 2,
+    version: 3,
     properties: [
       { ...blank('a', 'x'), owner: 'Ana', tenant: 'Luis', start: '2025-09-01', rent: 85000, costs: { ibi: 'owner' } },
       blank('b', 'z'),
@@ -184,12 +203,12 @@ test('normalizeProperties keeps a valid version 2 doc and drops what it does not
   });
 });
 
-test('normalizeProperties refuses a doc that is not version 1 or 2 properties', () => {
+test('normalizeProperties refuses a doc that is not version 1, 2 or 3 properties', () => {
   const bad = [
     null,
     42,
     {},
-    { version: 3, properties: [] },
+    { version: 4, properties: [] },
     { version: 1 },
     { version: 1, notes: [] },
     { version: 1, properties: [{ id: '', name: 'a' }] },
@@ -202,6 +221,14 @@ test('normalizeProperties refuses a doc that is not version 1 or 2 properties', 
     { version: 2, properties: [{ id: 'a', name: 'x', rent: -1 }] },
     { version: 2, properties: [{ id: 'a', name: 'x', deposit: '850' }] },
     { version: 2, properties: [{ id: 'a', name: 'x', costs: [] }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', paid: { 2026: 100 } }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', paid: { '2026-13': 100 } }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', paid: { '2026-01': -1 } }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', expenses: {} }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', expenses: [{ id: 'e', title: ' ', amount: 1, date: '2026-01-01' }] }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', expenses: [{ id: 'e', title: 't', amount: null, date: '2026-01-01' }] }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', expenses: [{ id: 'e', title: 't', amount: 1, date: '' }] }] },
+    { version: 3, properties: [{ id: 'a', name: 'x', expenses: [{ id: '', title: 't', amount: 1, date: '2026-01-01' }] }] },
   ];
   for (const data of bad) assert.equal(normalizeProperties(data), null, JSON.stringify(data));
 });

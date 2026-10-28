@@ -1,6 +1,7 @@
 import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindProperties, renderProperties, closePropertySheet } from '#ui/properties';
+import { bind as bindBalance, renderBalance, closeExpenseSheet } from '#ui/balance';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -18,6 +19,7 @@ const renderAll = () => {
   renderNav();
   $('title').textContent = t(`nav.${ui.view}`);
   renderProperties();
+  renderBalance();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -27,6 +29,7 @@ setRender(renderAll);
 
 bindNav();
 bindProperties();
+bindBalance();
 bindSettings();
 bindInstall();
 bindDrag();
@@ -62,7 +65,8 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   endReorder(false);
-  if (ui.sheetOpen) closePropertySheet();
+  if (ui.expenseOpen) closeExpenseSheet();
+  else if (ui.sheetOpen) closePropertySheet();
   else if (ui.propertyId !== null) {
     ui.propertyId = null;
     render();

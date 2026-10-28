@@ -48,6 +48,16 @@ test('the property sheet has a head with its title and Close, a body, and Save i
   assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"><\/button><\/footer>\s*<\/form>/);
 });
 
+test('the extra cost sheet has a veil, a dialog, a title, an amount and a date, and Save in its foot (BAL-8)', () => {
+  const [layer = ''] = body.match(/<div id="expense-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
+  assert.match(layer, /<div id="expense-veil" class="sheet-veil">/);
+  assert.match(layer, /<form id="expense-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="expense-sheet-title"/);
+  assert.match(layer, /<input id="expense-title"[^>]*maxlength="80" required/);
+  assert.match(layer, /<input id="expense-amount"[^>]*inputmode="decimal" required/);
+  assert.match(layer, /<input id="expense-date"[^>]*type="date" required/);
+  assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"><\/button><\/footer>\s*<\/form>/);
+});
+
 test('the walkthrough has one drawing for each page, in the order of the pages', () => {
   const [layer = ''] = body.match(/<div id="onboarding"[\s\S]*?<input id="import-file"/) ?? [];
   const drawings = [...layer.matchAll(/<svg data-page="([^"]+)"/g)].map(([, page]) => page);

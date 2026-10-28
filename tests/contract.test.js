@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, amountText, isDate, addYears, addMonths, contractTerm } from '#contract';
+import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, amountText, isDate, addYears, addMonths, localDay, formatDay, formatMonth, contractTerm } from '#contract';
 
 test('an empty amount is null', () => {
   for (const text of [undefined, null, '', '   ', ' € ']) assert.deepEqual(parseAmount(text, 'rent'), { cents: null });
@@ -49,6 +49,17 @@ test('an amount shows to edit with no currency and no groups, and reads back the
   for (const tag of ['es', 'en']) {
     for (const cents of [0, 5, 85050, 120000, 100_000_000]) assert.deepEqual(parseAmount(amountText(cents, tag), 'rent'), { cents });
   }
+});
+
+test('the local day of a date is YYYY-MM-DD', () => {
+  assert.equal(localDay(new Date(2026, 0, 5, 23, 59)), '2026-01-05');
+  assert.equal(localDay(new Date(2026, 11, 31, 0, 0)), '2026-12-31');
+});
+
+test('a day and a month show in the language of the page', () => {
+  assert.equal(formatDay('2026-03-15', 'en'), 'Mar 15, 2026');
+  assert.equal(formatMonth('2026-03', 'en'), 'March 2026');
+  assert.equal(formatMonth('2026-03', 'es'), 'marzo de 2026');
 });
 
 test('a date is a real day in the form YYYY-MM-DD', () => {

@@ -86,6 +86,8 @@ export const ui = {
   // The property whose detail is open, or null.
   propertyId: null,
   sheetOpen: false,
+  // True while the sheet of a new extra cost is open (BAL-4).
+  expenseOpen: false,
   // The property that the sheet edits, or null for a new property.
   editing: null,
   // The property row whose side actions are open, or null.

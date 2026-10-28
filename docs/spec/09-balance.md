@@ -31,3 +31,17 @@ files are `src/balance.js`, `src/ui/balance.js`, `tests/balance.test.js`, the `b
 - **BAL-6** `balanceOf` gives the sum and the count of the unpaid months, the sum of the paid
   months and the sum of the extra costs. An extra cost is the landlord's: it never adds to what
   the tenant owes.
+
+## Screen
+
+- **BAL-7** The detail of a property (PROP-8) ends with **Balance**. With no start or no rent it
+  shows `balance.needs`. Else it shows the total: **Unpaid:** the sum and the count of the unpaid
+  months in the danger colour, or **All paid.** in the done colour; then the rent months, newest
+  first, each with its month, its amount and a button: **Unpaid** in the danger colour, or
+  **Paid** in the done colour. A tap on the button marks the month paid or unpaid (BAL-3), with no
+  toast. The view reads today from the clock of the device, as a local day.
+- **BAL-8** Below the months, **Extra costs** lists the extra costs, newest first, each with its
+  title, its date, its amount and a delete button; a delete shows `toast.expenseDeleted` with
+  **Undo** for 5 seconds. **Add cost** opens the sheet of a new extra cost: **Title**, **Amount**
+  and **Date**, today by default, with **Close** in its head and **Save** in its foot. **Close**,
+  a tap on the veil, a drag down of the head or `Escape` closes it with no save.

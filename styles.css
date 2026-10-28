@@ -217,6 +217,102 @@
     border-color: var(--text);
   }
 
+  /* @component balance
+     @scope properties
+     @summary The balance of one property: the total, the rent months and the extra costs.
+     @part balance-title      The title of a part of the balance.
+     @part balance-total      The line of what is unpaid, in --done when all is paid.
+     @variant due             On balance-total: some month is unpaid; the line is in --danger.
+     @part balance-note       A line of help in second text.
+     @part balance-list       The list of the months or of the extra costs.
+     @part balance-row        One month or one extra cost: a name, an amount and a button.
+     @part balance-row-name   The name, with balance-row-meta below it.
+     @part balance-row-meta   The date of an extra cost, in second text.
+     @part balance-row-amount The amount.
+     @part balance-state      The button of a month: Unpaid in --danger, or Paid.
+     @variant paid            On balance-state: the month is paid, in --done on --done-soft.
+     @part balance-remove     The button that deletes an extra cost.
+     @example <section class="balance"><h3 class="balance-title">Balance</h3><p class="balance-total due">Unpaid: €850.00 (1 month)</p><ul class="balance-list"><li class="balance-row"><span class="balance-row-name">March 2026</span><span class="balance-row-amount">€850.00</span><button class="balance-state" type="button">Unpaid</button></li><li class="balance-row"><span class="balance-row-name">February 2026</span><span class="balance-row-amount">€850.00</span><button class="balance-state paid" type="button">Paid</button></li></ul></section> */
+  .balance {
+    margin-top: var(--space-6);
+  }
+
+  .balance-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--text-label);
+    font-weight: var(--weight-medium);
+  }
+
+  .balance-total {
+    margin: 0 0 var(--space-2);
+    color: var(--done);
+    font-weight: var(--weight-medium);
+  }
+
+  .balance-total.due {
+    color: var(--danger);
+  }
+
+  .balance-note {
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  .balance-list {
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .balance-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--tap);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .balance-row-name {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .balance-row-meta {
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  .balance-row-amount {
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+
+  /* One width for both states, so that the amounts of the rows line up. */
+  .balance-state {
+    min-width: calc(var(--tap) * 2);
+    min-height: var(--tap);
+    padding: 0 var(--space-3);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--danger);
+    font: inherit;
+    font-size: var(--text-label);
+  }
+
+  .balance-state.paid {
+    border-color: transparent;
+    background: var(--done-soft);
+    color: var(--done);
+  }
+
+  .balance-remove {
+    color: var(--muted);
+  }
+
   /* @component about
      @scope settings
      @summary The version lines at the end of Settings.

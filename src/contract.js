@@ -36,6 +36,14 @@ const partsOf = (text) => text.split('-').map(Number);
 const daysIn = (year, month) => new Date(Date.UTC(year, month, 0)).getUTCDate();
 const pad = (n, size = 2) => String(n).padStart(size, '0');
 
+// The local day of a Date as `YYYY-MM-DD`: the `today` of the rules.
+export const localDay = (now) => `${pad(now.getFullYear(), 4)}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+// Noon, so that no time zone moves the day.
+export const formatDay = (date, tag) => new Date(`${date}T12:00:00`).toLocaleDateString(tag, { dateStyle: 'medium' });
+export const formatMonth = (month, tag) =>
+  new Date(`${month}-15T12:00:00`).toLocaleDateString(tag, { month: 'long', year: 'numeric' });
+
 export const isDate = (text) => {
   if (typeof text !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
   const [year, month, day] = partsOf(text);

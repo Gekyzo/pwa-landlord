@@ -1,5 +1,5 @@
 import { COSTS, PAYERS, addProperty, editProperty, deleteProperty, findProperty } from '#properties';
-import { TERM_YEARS, amountText, contractTerm, formatAmount } from '#contract';
+import { TERM_YEARS, amountText, contractTerm, formatAmount, formatDay, localDay } from '#contract';
 import { intlTag } from '#i18n';
 import { bindSheetDrag } from '#ds/sheet';
 import { settle } from '#swipe';
@@ -117,18 +117,12 @@ const row = (property) => {
   return node;
 };
 
-// The local day of the device, as the contract term reads it (PROP-10).
-const today = () => {
-  const now = new Date();
-  return [now.getFullYear(), now.getMonth() + 1, now.getDate()].map((n, i) => String(n).padStart(i ? 2 : 4, '0')).join('-');
-};
-
-const formatDate = (date) => new Date(`${date}T12:00:00`).toLocaleDateString(intlTag(lang), { dateStyle: 'medium' });
+const formatDate = (date) => formatDay(date, intlTag(lang));
 
 // The filled facts of the contract, as pairs of a name and a value.
 const factsOf = (property) => {
   const tag = intlTag(lang);
-  const term = contractTerm(property.start, today());
+  const term = contractTerm(property.start, localDay(new Date()));
   return [
     ['properties.owner', property.owner],
     ['properties.tenant', property.tenant],
@@ -167,7 +161,7 @@ const renderFacts = (property) => {
 export const renderProperties = () => {
   const visible = ui.view === 'properties';
   $('properties').hidden = !visible;
-  $('fab').hidden = !visible || ui.sheetOpen;
+  $('fab').hidden = !visible || ui.sheetOpen || ui.expenseOpen;
   if (ui.openId && !findProperty(state, ui.openId)) ui.openId = null;
   $('property-list').replaceChildren(...state.properties.map(row));
   ui.settleFrom = null;

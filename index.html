@@ -46,6 +46,16 @@
             <button id="property-edit" class="button outline" type="button" data-i18n="properties.edit"></button>
             <button id="property-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="properties.delete"></span></button>
           </div>
+          <section id="property-balance" class="balance">
+            <h3 class="balance-title" data-i18n="balance.title"></h3>
+            <p id="balance-total" class="balance-total"></p>
+            <p id="balance-needs" class="balance-note" data-i18n="balance.needs"></p>
+            <ul id="balance-months" class="balance-list"></ul>
+            <h3 class="balance-title" data-i18n="balance.expenses"></h3>
+            <p class="balance-note" data-i18n="balance.expensesNote"></p>
+            <ul id="expense-list" class="balance-list"></ul>
+            <button id="expense-add" class="button outline" type="button" data-i18n="balance.addExpense"></button>
+          </section>
         </article>
       </section>
 
@@ -148,6 +158,20 @@
       </form>
     </div>
 
+    <div id="expense-sheet" class="sheet-layer" hidden>
+      <div id="expense-veil" class="sheet-veil"></div>
+      <form id="expense-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="expense-sheet-title" autocomplete="off">
+        <div class="sheet-grab"></div>
+        <header class="sheet-head"><h2 id="expense-sheet-title" class="sheet-title main" data-i18n="expense.new"></h2><button id="expense-close" class="button tonal" type="button" data-i18n="properties.close"></button></header>
+        <div class="sheet-body">
+          <label class="field"><input id="expense-title" class="input field-input" type="text" maxlength="80" required data-i18n-attr="placeholder:expense.title"><span class="field-label" data-i18n="expense.title"></span></label>
+          <label class="field"><input id="expense-amount" class="input field-input" type="text" inputmode="decimal" required data-i18n-attr="placeholder:expense.amount"><span class="field-label" data-i18n="expense.amount"></span></label>
+          <label class="field"><input id="expense-date" class="input field-input" type="date" required><span class="field-label" data-i18n="expense.date"></span></label>
+        </div>
+        <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
+      </form>
+    </div>
+
     <div id="onboarding" class="onboarding" role="dialog" aria-modal="true" data-i18n-attr="aria-label:onboarding.label" hidden>
       <img class="onboarding-logo" src="./icons/logo.png" alt="">
       <div id="onboarding-page" class="onboarding-page">
@@ -223,6 +247,7 @@
           "#ui/motion": "./src/ui/motion.js",
           "#ui/nav": "./src/ui/nav.js",
           "#ui/properties": "./src/ui/properties.js",
+          "#ui/balance": "./src/ui/balance.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",
           "#reorder": "./src/reorder.js",

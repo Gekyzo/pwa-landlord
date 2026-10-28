@@ -9,8 +9,10 @@ export const MAX_PERSON = 120;
 // The running costs of a house; each one is paid by the owner or the tenant, or not assigned.
 export const COSTS = ['community', 'ibi', 'water', 'power', 'gas', 'rubbish', 'internet'];
 export const PAYERS = ['owner', 'tenant'];
+// The kinds of an extra cost that the owner pays (FIN-1).
+export const KINDS = ['levy', 'ibi', 'tax', 'insurance', 'other'];
 
-export const emptyProperties = () => ({ version: 3, properties: [] });
+export const emptyProperties = () => ({ version: 4, properties: [] });
 
 const missing = (state) => ({ state, error: { key: 'error.propertyMissing' } });
 
@@ -22,8 +24,21 @@ const cleanCosts = (costs) =>
     COSTS.filter((cost) => PAYERS.includes(costs?.[cost])).map((cost) => [cost, costs[cost]]),
   );
 
-// The clean fields, or an error message. `rent` and `deposit` are texts, as typed (PROP-11).
-const checkFields = ({ name, address, owner, tenant, start, rent, deposit, costs } = {}) => {
+// The mortgage of its three texts: null with no amount, else it needs a first payment and a last
+// one, when set, on or after it (FIN-1).
+const checkMortgage = (amount, start, end) => {
+  const { cents, error } = parseAmount(amount, 'mortgage');
+  if (error) return { error };
+  if (cents === null) return { mortgage: null };
+  const clean = { start: text(start), end: text(end) };
+  if (!isDate(clean.start)) return { error: { key: 'error.mortgageStart' } };
+  if (clean.end && (!isDate(clean.end) || clean.end < clean.start)) return { error: { key: 'error.mortgageEnd' } };
+  return { mortgage: { amount: cents, ...clean } };
+};
+
+// The clean fields, or an error message. `rent`, `deposit` and `mortgageAmount` are texts, as
+// typed (PROP-11).
+const checkFields = ({ name, address, owner, tenant, start, rent, deposit, costs, mortgageAmount, mortgageStart, mortgageEnd } = {}) => {
   const clean = { name: text(name), address: text(address), owner: text(owner), tenant: text(tenant), start: text(start) };
   if (!clean.name) return { error: { key: 'error.nameRequired' } };
   if (clean.name.length > MAX_NAME) return { error: { key: 'error.nameTooLong', params: { max: MAX_NAME } } };
@@ -38,7 +53,9 @@ const checkFields = ({ name, address, owner, tenant, start, rent, deposit, costs
     if (error) return { error };
     amounts[field] = cents;
   }
-  return { clean: { ...clean, ...amounts, costs: cleanCosts(costs) } };
+  const { mortgage, error } = checkMortgage(mortgageAmount, mortgageStart, mortgageEnd);
+  if (error) return { error };
+  return { clean: { ...clean, ...amounts, costs: cleanCosts(costs), mortgage } };
 };
 
 export const findProperty = (state, id) => state.properties.find((property) => property.id === id) ?? null;
@@ -79,8 +96,9 @@ const isText = (value) => typeof value === 'string';
 const isAmount = (value) => value === null || (Number.isInteger(value) && value >= 0 && value <= MAX_AMOUNT);
 
 const isMonth = (key) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key);
-const isExpense = (expense) =>
+const isExpense = (expense, version) =>
   isObject(expense) &&
+  (version < 4 || KINDS.includes(expense.kind)) &&
   typeof expense.id === 'string' &&
   expense.id !== '' &&
   typeof expense.title === 'string' &&
@@ -92,8 +110,16 @@ const isPaid = (paid) =>
   isObject(paid) &&
   !Array.isArray(paid) &&
   Object.entries(paid).every(([month, cents]) => isMonth(month) && isAmount(cents) && cents !== null);
-const validBalance = ({ paid, expenses }) =>
-  optional(paid, isPaid) && optional(expenses, (list) => Array.isArray(list) && list.every(isExpense));
+const validBalance = ({ paid, expenses }, version) =>
+  optional(paid, isPaid) &&
+  optional(expenses, (list) => Array.isArray(list) && list.every((expense) => isExpense(expense, version)));
+const isMortgage = (mortgage) =>
+  mortgage === null ||
+  (isObject(mortgage) &&
+    isAmount(mortgage.amount) &&
+    mortgage.amount !== null &&
+    isDate(mortgage.start) &&
+    (mortgage.end === '' || (isDate(mortgage.end) && mortgage.end >= mortgage.start)));
 
 const validProperty = (property, version) =>
   isObject(property) &&
@@ -109,13 +135,15 @@ const validProperty = (property, version) =>
       optional(property.rent, isAmount) &&
       optional(property.deposit, isAmount) &&
       optional(property.costs, (costs) => isObject(costs) && !Array.isArray(costs)) &&
-      (version === 2 || validBalance(property))));
+      (version === 2 || validBalance(property, version)) &&
+      (version < 4 || optional(property.mortgage, isMortgage))));
 
-// A clean version 3 doc, or null. An older doc migrates: a version 1 property gets the empty facts
-// of a contract, and a version 1 or 2 property an empty balance (PROP-2). Add a migration here
-// when the version goes up.
+// A clean version 4 doc, or null. An older doc migrates: a version 1 property gets the empty facts
+// of a contract, a version 1 or 2 property an empty balance, and a version 1 to 3 property no
+// mortgage, with each extra cost of kind `other` (PROP-2). Add a migration here when the version
+// goes up.
 export const normalizeProperties = (data) => {
-  if (!isObject(data) || ![1, 2, 3].includes(data.version) || !Array.isArray(data.properties)) return null;
+  if (!isObject(data) || ![1, 2, 3, 4].includes(data.version) || !Array.isArray(data.properties)) return null;
   if (!data.properties.every((property) => validProperty(property, data.version))) return null;
   const properties = data.properties.map((property) => ({
     id: property.id,
@@ -127,9 +155,16 @@ export const normalizeProperties = (data) => {
     rent: property.rent ?? null,
     deposit: property.deposit ?? null,
     costs: cleanCosts(property.costs),
+    mortgage: property.mortgage ? { amount: property.mortgage.amount, start: property.mortgage.start, end: property.mortgage.end } : null,
     paid: { ...property.paid },
-    expenses: (property.expenses ?? []).map(({ id, title, amount, date }) => ({ id, title: title.trim(), amount, date })),
+    expenses: (property.expenses ?? []).map(({ id, title, amount, date, kind = 'other' }) => ({
+      id,
+      title: title.trim(),
+      amount,
+      date,
+      kind,
+    })),
   }));
   if (new Set(properties.map((property) => property.id)).size !== properties.length) return null;
-  return { version: 3, properties };
+  return { version: 4, properties };
 };

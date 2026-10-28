@@ -1,5 +1,5 @@
 import { TERM_YEARS, addMonths, isDate, parseAmount } from '#contract';
-import { findProperty } from '#properties';
+import { KINDS, findProperty } from '#properties';
 
 // The balance of a property (BAL-1 to BAL-6): the rent months since the start, which of them are
 // paid, and the extra costs that the landlord pays.
@@ -55,7 +55,7 @@ export const togglePaid = (state, id, month) =>
     return { property: { ...property, paid: { ...property.paid, [month]: property.rent } } };
   });
 
-const checkExpense = ({ title, amount, date } = {}) => {
+const checkExpense = ({ title, amount, date, kind = 'other' } = {}) => {
   const cleanTitle = String(title ?? '').trim();
   if (!cleanTitle) return { error: { key: 'error.titleRequired' } };
   if (cleanTitle.length > MAX_TITLE) return { error: { key: 'error.titleTooLong', params: { max: MAX_TITLE } } };
@@ -63,7 +63,8 @@ const checkExpense = ({ title, amount, date } = {}) => {
   if (error) return { error };
   if (cents === null) return { error: { key: 'error.expenseRequired' } };
   if (!isDate(date)) return { error: { key: 'error.dateInvalid' } };
-  return { clean: { title: cleanTitle, amount: cents, date } };
+  if (!KINDS.includes(kind)) return { error: { key: 'error.kindInvalid' } };
+  return { clean: { title: cleanTitle, amount: cents, date, kind } };
 };
 
 // An extra cost goes first (BAL-4).

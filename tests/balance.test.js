@@ -12,11 +12,12 @@ const property = (fields = {}) => ({
   rent: 80000,
   deposit: null,
   costs: {},
+  mortgage: null,
   paid: {},
   expenses: [],
   ...fields,
 });
-const doc = (fields) => ({ version: 3, properties: [property(fields)] });
+const doc = (fields) => ({ version: 4, properties: [property(fields)] });
 
 test('the rent months run from the start to today, newest first, each due on the start day', () => {
   assert.deepEqual(rentMonths(property(), '2026-03-30'), [
@@ -73,10 +74,17 @@ test('an extra cost is added first, trimmed and read', () => {
   const { state: next, error } = addExpense(state, 'p0', { title: ' Rubbish tax ', amount: '60,5', date: '2026-02-01' }, 'e');
   assert.equal(error, undefined);
   assert.deepEqual(next.properties[0].expenses, [
-    { id: 'e', title: 'Rubbish tax', amount: 6050, date: '2026-02-01' },
+    { id: 'e', title: 'Rubbish tax', amount: 6050, date: '2026-02-01', kind: 'other' },
     { id: 'old', title: 'Old', amount: 100, date: '2026-01-01' },
   ]);
   assert.equal(state.properties[0].expenses.length, 1);
+});
+
+test('an extra cost has a kind, other by default, and an unknown kind is an error', () => {
+  const ok = { title: 'T', amount: '1', date: '2026-01-01' };
+  assert.equal(addExpense(doc(), 'p0', ok, 'e').state.properties[0].expenses[0].kind, 'other');
+  assert.equal(addExpense(doc(), 'p0', { ...ok, kind: 'ibi' }, 'e').state.properties[0].expenses[0].kind, 'ibi');
+  assert.deepEqual(addExpense(doc(), 'p0', { ...ok, kind: 'car' }, 'e').error, { key: 'error.kindInvalid' });
 });
 
 test('an extra cost that is not valid is an error and the state is unchanged', () => {

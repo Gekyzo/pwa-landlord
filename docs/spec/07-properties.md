@@ -7,22 +7,24 @@ the `#properties` section and the `#property-sheet` of `index.html`.
 
 ## Doc
 
-- **PROP-1** The doc is `{ version: 3, properties: [{ id, name, address, owner, tenant, start,
-  rent, deposit, costs, paid, expenses }] }`, newest property first, stored as JSON under `pwa-landlord.properties`.
+- **PROP-1** The doc is `{ version: 4, properties: [{ id, name, address, owner, tenant, start,
+  rent, deposit, costs, mortgage, paid, expenses }] }`, newest property first, stored as JSON under `pwa-landlord.properties`.
   `owner` and `tenant` are full names, `''` when empty; `start` is the day the contract starts,
   `YYYY-MM-DD` or `''`; `rent` and `deposit` are amounts (PROP-11) or `null`; `costs` maps a cost
   of `COSTS` (`community`, `ibi`, `water`, `power`, `gas`, `rubbish`, `internet`) to `owner` or
-  `tenant`, and a cost with no entry is not assigned. `paid` and `expenses` are the balance
-  (BAL-1). A stored doc that is not valid is kept
+  `tenant`, and a cost with no entry is not assigned. `mortgage` is the mortgage (FIN-1) or
+  `null`. `paid` and `expenses` are the balance (BAL-1). A stored doc that is not valid is kept
   under `pwa-landlord.properties.corrupt`, and the app starts with no properties. The
   `pwa-landlord.notes` key of 0.1.1 is not read.
-- **PROP-2** `normalizeProperties` accepts a doc of version 1, 2 or 3 whose properties have a
+- **PROP-2** `normalizeProperties` accepts a doc of version 1 to 4 whose properties have a
   non-empty id, a name that is not blank, and no id two times; in version 2 also a text or no
   `owner` and `tenant`, a real day, `''` or no `start`, an amount, `null` or no `rent` and
-  `deposit`, and an object or no `costs`; in version 3 also the balance of BAL-1. It trims the texts, gives an absent field its empty
+  `deposit`, and an object or no `costs`; in version 3 also the balance of BAL-1 with no kind; in version 4 the balance with a kind of
+  `KINDS` and a mortgage of FIN-1, `null` or none. It trims the texts, gives an absent field its empty
   value, drops a cost that is not in `COSTS` or has another payer, and drops unknown fields. An
-  older doc, also from an import, becomes version 3 with the empty values: no facts of the
-  contract for version 1, and `paid` `{}` and `expenses` `[]` for versions 1 and 2. A new version
+  older doc, also from an import, becomes version 4 with the empty values: no facts of the
+  contract for version 1, `paid` `{}` and `expenses` `[]` for versions 1 and 2, and `mortgage`
+  `null` and each extra cost of kind `other` for versions 1 to 3. A new version
   adds its migration here.
 
 ## Operations
@@ -31,10 +33,11 @@ the `#properties` section and the `#property-sheet` of `index.html`.
   `error.nameRequired`, a name of more than 80 characters is `error.nameTooLong`, an address of
   more than 200 characters is `error.addressTooLong`, an owner or a tenant of more than 120
   characters is `error.ownerTooLong` or `error.tenantTooLong`, and a start that is not a real day
-  is `error.startInvalid`. The rent and the deposit come as texts (PROP-11). Every other field can
-  be empty.
-- **PROP-4** `editProperty` changes the name, the address and the summary of one property, with
-  the checks of PROP-3. Its balance stays as it is.
+  is `error.startInvalid`. The rent and the deposit come as texts (PROP-11). The mortgage comes as
+  three texts, `mortgageAmount`, `mortgageStart` and `mortgageEnd`, read by FIN-1. Every other
+  field can be empty.
+- **PROP-4** `editProperty` changes the name, the address, the summary and the mortgage of one
+  property, with the checks of PROP-3. Its balance stays as it is.
 - **PROP-5** `deleteProperty` removes one property. The toast `toast.propertyDeleted` offers
   **Undo** for 5 seconds.
 - **PROP-6** `moveProperty` puts a property at an index of the list, clamped to its ends. The

@@ -17,6 +17,7 @@
 | `src/properties.js` | Pure property operations, the doc and its validation | `config`, `contract` |
 | `src/contract.js` | The amounts in euros and the term of a contract (PROP-10, PROP-11) | nothing |
 | `src/balance.js` | The rent months, their payment and the extra costs of a property (BAL-1 to BAL-6) | `contract`, `properties` |
+| `src/finances.js` | The mortgage months, the years and the finances of a year of a property (FIN-2 to FIN-4) | `contract`, `balance`, `properties` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
@@ -94,6 +95,7 @@ The doc keys are in [07-properties.md](07-properties.md). The device preferences
 | `tests/properties.test.js` | The property operations and the validation of the doc |
 | `tests/contract.test.js` | The amounts and the term of a contract (PROP-10, PROP-11) |
 | `tests/balance.test.js` | The rent months, the balance, the payment and the extra costs (BAL-1 to BAL-6) |
+| `tests/finances.test.js` | The mortgage months, the years and the finances of a year (FIN-2 to FIN-4) |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6) |
 | `tests/session.test.js` | The session, the start route, the offline flag, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5, ACC-10) |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |

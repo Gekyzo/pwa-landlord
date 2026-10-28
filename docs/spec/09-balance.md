@@ -9,8 +9,9 @@ files are `src/balance.js`, `src/ui/balance.js`, `tests/balance.test.js`, the `b
 ## Doc
 
 - **BAL-1** A property has `paid`, an object from a month `YYYY-MM` to the amount (PROP-11, not
-  `null`) that it was paid with, and `expenses`, a list of `{ id, title, amount, date }`, newest
-  first: a title that is not blank, an amount that is not `null` and a real day.
+  `null`) that it was paid with, and `expenses`, a list of `{ id, title, amount, date, kind }`, newest
+  first: a title that is not blank, an amount that is not `null`, a real day and a kind of
+  `KINDS` (FIN-1).
 
 ## Rules
 
@@ -24,7 +25,8 @@ files are `src/balance.js`, `src/ui/balance.js`, `tests/balance.test.js`, the `b
 - **BAL-4** `addExpense` puts an extra cost first. Its title is trimmed: blank is
   `error.titleRequired`, more than 80 characters `error.titleTooLong`. Its amount is read as
   PROP-11: empty is `error.expenseRequired`, else `error.expenseInvalid` or
-  `error.expenseTooLarge`. A date that is not a real day is `error.dateInvalid`.
+  `error.expenseTooLarge`. A date that is not a real day is `error.dateInvalid`. With no kind it is `other`; a kind that is
+  not in `KINDS` is `error.kindInvalid`.
 - **BAL-5** `deleteExpense` removes one extra cost; one that is not there is
   `error.expenseMissing`. A property that is not there is `error.propertyMissing` for each
   operation.

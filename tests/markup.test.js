@@ -58,6 +58,15 @@ test('the extra cost sheet has a veil, a dialog, a title, an amount and a date, 
   assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"><\/button><\/footer>\s*<\/form>/);
 });
 
+test('the property sheet has the mortgage fields, and the cost sheet a kind (FIN-5)', () => {
+  assert.match(body, /<input id="property-mortgage-amount"[^>]*inputmode="decimal"/);
+  assert.match(body, /<input id="property-mortgage-start"[^>]*type="date"/);
+  assert.match(body, /<input id="property-mortgage-end"[^>]*type="date"/);
+  assert.match(body, /<select id="expense-kind" class="select field-input"/);
+  assert.match(body, /<section id="property-finances" class="finances">/);
+  assert.match(body, /<select id="finance-year" class="select field-input"/);
+});
+
 test('the walkthrough has one drawing for each page, in the order of the pages', () => {
   const [layer = ''] = body.match(/<div id="onboarding"[\s\S]*?<input id="import-file"/) ?? [];
   const drawings = [...layer.matchAll(/<svg data-page="([^"]+)"/g)].map(([, page]) => page);

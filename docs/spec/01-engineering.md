@@ -29,6 +29,7 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/drag`, `ui/update`, `ui/dust` |
 | `src/ui/properties.js` | The Properties section, its rows, its summary and its sheet | `ds/sheet`, `properties`, `contract`, `i18n`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
+| `src/ui/finances.js` | The Finances part of the detail of a property (FIN-5, FIN-6) | `finances`, `contract`, `properties`, `i18n`, `ui/context` |
 | `src/ui/balance.js` | The Balance part of the detail of a property and the sheet of an extra cost (BAL-7, BAL-8) | `balance`, `contract`, `properties`, `i18n`, `ds/sheet`, `ui/context`, `ui/controls` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/drag.js` | The hold and move of a row (optional) | `properties`, `reorder`, `ui/context`, `ui/motion` |

@@ -9,6 +9,7 @@ import { reorder, bindReorder } from '#ui/drag';
 
 const TEXTS = ['name', 'address', 'owner', 'tenant', 'start'];
 const AMOUNTS = ['rent', 'deposit'];
+const MORTGAGE = { mortgageAmount: 'mortgage-amount', mortgageStart: 'mortgage-start', mortgageEnd: 'mortgage-end' };
 
 // One select for each cost, built at each opening so that its texts follow the language.
 const costField = (cost, payer = '') => {
@@ -28,6 +29,10 @@ const openSheet = (id = null) => {
   for (const field of TEXTS) $(`property-${field}`).value = property?.[field] ?? '';
   for (const field of AMOUNTS) $(`property-${field}`).value = amountText(property?.[field] ?? null, intlTag(lang));
   $('property-cost-fields').replaceChildren(...COSTS.map((cost) => costField(cost, property?.costs[cost])));
+  const mortgage = property?.mortgage ?? null;
+  $('property-mortgage-amount').value = amountText(mortgage?.amount ?? null, intlTag(lang));
+  $('property-mortgage-start').value = mortgage?.start ?? '';
+  $('property-mortgage-end').value = mortgage?.end ?? '';
   render();
   $('property-name').focus();
 };
@@ -193,6 +198,7 @@ export const bind = () => {
     event.preventDefault();
     const fields = Object.fromEntries([...TEXTS, ...AMOUNTS].map((field) => [field, $(`property-${field}`).value]));
     fields.costs = Object.fromEntries(COSTS.map((cost) => [cost, $(`property-cost-${cost}`).value]));
+    for (const [field, id] of Object.entries(MORTGAGE)) fields[field] = $(`property-${id}`).value;
     const result = ui.editing ? editProperty(state, ui.editing, fields) : addProperty(state, fields);
     if (apply(result)) closePropertySheet();
   });

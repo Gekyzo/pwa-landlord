@@ -313,6 +313,70 @@
     color: var(--muted);
   }
 
+  /* @component finances
+     @scope properties
+     @summary The finances of one property in a year: rent collected, costs by kind and net.
+     @part finances-title The title of the part.
+     @part finances-year  The field of the select of the year.
+     @part finances-list  The list of the lines.
+     @part finances-row   One line: a name and an amount.
+     @variant due         On finances-row: the unpaid rent, in --danger.
+     @variant total       On finances-row: the total of the costs, with a line above it.
+     @variant net         On finances-row: the net, in --done.
+     @variant loss        On finances-row with net: the net is below zero, in --danger.
+     @example <section class="finances"><h3 class="finances-title">Finances</h3><dl class="finances-list"><div class="finances-row"><dt>Rent collected</dt><dd>€800.00</dd></div><div class="finances-row due"><dt>Unpaid rent</dt><dd>€1,600.00</dd></div><div class="finances-row"><dt>Mortgage</dt><dd>€1,000.00</dd></div><div class="finances-row total"><dt>Total costs</dt><dd>€1,000.00</dd></div><div class="finances-row net loss"><dt>Net</dt><dd>-€200.00</dd></div></dl></section> */
+  .finances {
+    margin-top: var(--space-6);
+  }
+
+  .finances-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--text-label);
+    font-weight: var(--weight-medium);
+  }
+
+  .finances-list {
+    margin: 0 0 var(--space-4);
+  }
+
+  .finances-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: var(--tap);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .finances-row dt,
+  .finances-row dd {
+    margin: 0;
+  }
+
+  .finances-row dd {
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+
+  .finances-row.due {
+    color: var(--danger);
+  }
+
+  .finances-row.total {
+    border-top: 1px solid var(--line);
+    font-weight: var(--weight-medium);
+  }
+
+  .finances-row.net {
+    border-bottom: 0;
+    color: var(--done);
+    font-weight: var(--weight-medium);
+  }
+
+  .finances-row.net.loss {
+    color: var(--danger);
+  }
+
   /* @component about
      @scope settings
      @summary The version lines at the end of Settings.

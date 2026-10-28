@@ -1,6 +1,6 @@
 import { balanceOf, rentMonths, togglePaid, addExpense, deleteExpense } from '#balance';
 import { formatAmount, formatDay, formatMonth, localDay } from '#contract';
-import { findProperty } from '#properties';
+import { KINDS, findProperty } from '#properties';
 import { intlTag } from '#i18n';
 import { bindSheetDrag } from '#ds/sheet';
 import { $, el, ui, state, t, lang, apply, render } from '#ui/context';
@@ -14,6 +14,9 @@ const openExpenseSheet = () => {
   ui.expenseOpen = true;
   for (const field of ['title', 'amount']) $(`expense-${field}`).value = '';
   $('expense-date').value = today();
+  // Built at each opening so that its texts follow the language.
+  $('expense-kind').replaceChildren(...KINDS.map((kind) => el('option', { value: kind, textContent: t(`kind.${kind}`) })));
+  $('expense-kind').value = 'other';
   render();
   $('expense-title').focus();
 };
@@ -50,7 +53,7 @@ const expenseRow = (propertyId, expense) => {
   return el('li', { className: 'balance-row' }, [
     el('span', { className: 'balance-row-name' }, [
       el('span', { textContent: expense.title }),
-      el('small', { className: 'balance-row-meta', textContent: formatDay(expense.date, intlTag(lang)) }),
+      el('small', { className: 'balance-row-meta', textContent: `${formatDay(expense.date, intlTag(lang))} · ${t(`kind.${expense.kind}`)}` }),
     ]),
     el('span', { className: 'balance-row-amount', textContent: money(expense.amount) }),
     remove,
@@ -82,7 +85,12 @@ export const bind = () => {
   bindSheetDrag($('expense-sheet'), { close: closeExpenseSheet });
   $('expense-form').addEventListener('submit', (event) => {
     event.preventDefault();
-    const fields = { title: $('expense-title').value, amount: $('expense-amount').value, date: $('expense-date').value };
+    const fields = {
+      title: $('expense-title').value,
+      amount: $('expense-amount').value,
+      date: $('expense-date').value,
+      kind: $('expense-kind').value,
+    };
     if (apply(addExpense(state, ui.propertyId, fields))) closeExpenseSheet();
   });
 };

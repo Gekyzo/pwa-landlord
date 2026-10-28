@@ -56,6 +56,11 @@
             <ul id="expense-list" class="balance-list"></ul>
             <button id="expense-add" class="button outline" type="button" data-i18n="balance.addExpense"></button>
           </section>
+          <section id="property-finances" class="finances">
+            <h3 class="finances-title" data-i18n="finances.title"></h3>
+            <label class="field finances-year"><select id="finance-year" class="select field-input"></select><span class="field-label" data-i18n="finances.year"></span></label>
+            <dl id="finance-rows" class="finances-list"></dl>
+          </section>
         </article>
       </section>
 
@@ -153,6 +158,10 @@
           <label class="field"><input id="property-deposit" class="input field-input" type="text" inputmode="decimal" data-i18n-attr="placeholder:properties.deposit"><span class="field-label" data-i18n="properties.deposit"></span></label>
           <h3 class="sheet-title part" data-i18n="properties.costs"></h3>
           <div id="property-cost-fields"></div>
+          <h3 class="sheet-title part" data-i18n="properties.mortgage"></h3>
+          <label class="field"><input id="property-mortgage-amount" class="input field-input" type="text" inputmode="decimal" data-i18n-attr="placeholder:properties.mortgageAmount"><span class="field-label" data-i18n="properties.mortgageAmount"></span></label>
+          <label class="field"><input id="property-mortgage-start" class="input field-input" type="date"><span class="field-label" data-i18n="properties.mortgageStart"></span></label>
+          <label class="field"><input id="property-mortgage-end" class="input field-input" type="date"><span class="field-label" data-i18n="properties.mortgageEnd"></span></label>
         </div>
         <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
       </form>
@@ -167,6 +176,7 @@
           <label class="field"><input id="expense-title" class="input field-input" type="text" maxlength="80" required data-i18n-attr="placeholder:expense.title"><span class="field-label" data-i18n="expense.title"></span></label>
           <label class="field"><input id="expense-amount" class="input field-input" type="text" inputmode="decimal" required data-i18n-attr="placeholder:expense.amount"><span class="field-label" data-i18n="expense.amount"></span></label>
           <label class="field"><input id="expense-date" class="input field-input" type="date" required><span class="field-label" data-i18n="expense.date"></span></label>
+          <label class="field"><select id="expense-kind" class="select field-input"></select><span class="field-label" data-i18n="expense.kind"></span></label>
         </div>
         <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="properties.save"></button></footer>
       </form>
@@ -249,6 +259,7 @@
           "#ui/nav": "./src/ui/nav.js",
           "#ui/properties": "./src/ui/properties.js",
           "#ui/balance": "./src/ui/balance.js",
+          "#ui/finances": "./src/ui/finances.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",
           "#reorder": "./src/reorder.js",

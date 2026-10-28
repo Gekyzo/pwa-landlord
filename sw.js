@@ -20,6 +20,7 @@ const SHELL = [
   './src/ui/nav.js',
   './src/ui/properties.js',
   './src/ui/balance.js',
+  './src/ui/finances.js',
   './src/ui/settings.js',
   './src/ui/update.js',
   './src/ui/drag.js',

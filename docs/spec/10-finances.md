@@ -1,8 +1,9 @@
 # Finances
 
 The finances of a property in a year: the rent collected against the costs that the owner pays.
-Its files are `src/finances.js`, `tests/finances.test.js` and the `error.mortgage*` and
-`error.kindInvalid` keys of the catalogs. Everything stays on the device.
+Its files are `src/finances.js`, `src/ui/finances.js`, `tests/finances.test.js`, the
+`finances.*`, `kind.*`, `properties.mortgage*`, `expense.kind`, `error.mortgage*` and
+`error.kindInvalid` keys of the catalogs and the `#property-finances` part of the detail. Everything stays on the device.
 
 ## Doc
 
@@ -28,3 +29,16 @@ Its files are `src/finances.js`, `tests/finances.test.js` and the `error.mortgag
   payments of the year (FIN-2) times the amount, and the sum of the extra costs dated in the year
   for each kind; **total**, the sum of the costs; **net**, rent minus total. Unpaid rent is never
   in the net.
+
+## Screen
+
+- **FIN-5** The sheet of a property (PROP-8) ends with the part **Mortgage**: **Mortgage per
+  month**, **First payment** and **Last payment**, two date pickers. The sheet of an extra cost
+  (BAL-8) has **Kind**, a select of `KINDS`, **Other** by default. Each extra cost of the balance
+  shows its kind beside its date.
+- **FIN-6** The detail of a property ends with **Finances**: a select of the years of FIN-3, the
+  current year when the detail opens, then the lines of FIN-4 for the chosen year: **Rent
+  collected**; **Unpaid rent** in the danger colour, only above 0; one line for each cost above 0,
+  **Mortgage** first, then the kinds in the order of `KINDS`; **Total costs**; **Net**, in the done
+  colour at 0 or above and in the danger colour below 0. The view reads today from the clock of
+  the device, as a local day.

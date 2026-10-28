@@ -88,6 +88,8 @@ export const ui = {
   sheetOpen: false,
   // True while the sheet of a new extra cost is open (BAL-4).
   expenseOpen: false,
+  // The year that the Finances part shows, or null for the current year (FIN-6).
+  financeYear: null,
   // The property that the sheet edits, or null for a new property.
   editing: null,
   // The property row whose side actions are open, or null.

@@ -2,6 +2,7 @@ import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindProperties, renderProperties, closePropertySheet } from '#ui/properties';
 import { bind as bindBalance, renderBalance, closeExpenseSheet } from '#ui/balance';
+import { bind as bindFinances, renderFinances } from '#ui/finances';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -20,6 +21,7 @@ const renderAll = () => {
   $('title').textContent = t(`nav.${ui.view}`);
   renderProperties();
   renderBalance();
+  renderFinances();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -30,6 +32,7 @@ setRender(renderAll);
 bindNav();
 bindProperties();
 bindBalance();
+bindFinances();
 bindSettings();
 bindInstall();
 bindDrag();

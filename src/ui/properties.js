@@ -181,7 +181,13 @@ const renderFacts = (property) => {
 export const renderProperties = () => {
   const visible = ui.view === 'properties';
   $('properties').hidden = !visible;
-  $('fab').hidden = !visible || ui.sheetOpen || ui.expenseOpen;
+  // From 600px the add is the button of the header (NAV-3); below, the floating +.
+  const noAdd = !visible || ui.sheetOpen || ui.expenseOpen;
+  $('fab').hidden = noAdd;
+  $('header-add').hidden = noAdd;
+  $('header-add-text').textContent = t('properties.add');
+  // The sidebar from 1024px counts the properties (NAV-4).
+  $('nav-count').textContent = state.properties.length > 0 ? String(state.properties.length) : '';
   if (ui.openId && !findProperty(state, ui.openId)) ui.openId = null;
   $('property-list').replaceChildren(...state.properties.map(row));
   ui.settleFrom = null;
@@ -201,7 +207,7 @@ export const renderProperties = () => {
 };
 
 export const bind = () => {
-  $('fab').addEventListener('click', () => openSheet());
+  for (const id of ['fab', 'header-add']) $(id).addEventListener('click', () => openSheet());
   $('properties-add').addEventListener('click', () => openSheet());
   $('property-veil').addEventListener('click', closePropertySheet);
   $('property-close').addEventListener('click', closePropertySheet);

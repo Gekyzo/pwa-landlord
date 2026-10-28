@@ -34,6 +34,11 @@ const renderAll = () => {
 };
 setRender(renderAll);
 
+// The sheets from 840px start below the header (DSV-6), whose height changes with its text.
+new ResizeObserver(([entry]) => {
+  document.documentElement.style.setProperty('--header-height', `${Math.round(entry.borderBoxSize[0].blockSize)}px`);
+}).observe(document.querySelector('.app-header'));
+
 bindNav();
 bindProperties();
 bindBalance();

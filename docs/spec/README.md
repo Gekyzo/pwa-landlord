@@ -51,7 +51,7 @@ The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-desi
 |---|---|
 | Shell | The files that the service worker keeps for offline use: `SHELL` of `sw.js` |
 | Deploy | A release tag `vX.Y.Z` that GitHub Pages publishes |
-| Size class | compact (below 600px), medium (600px to 839px) or expanded (840px and up) |
+| Width class | phone (below 600px), foldable (600px to 839px), tablet (840px to 1023px) or desktop (1024px and up), DSV-5 |
 | Section | One of the screens of the navigation: Properties and Settings |
 | Module | A part of the app that Settings turns off, with its sections |
 | Pane | The list and the detail of one entry, side by side in the expanded class |

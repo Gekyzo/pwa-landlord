@@ -18,6 +18,26 @@ const files = {
   pageHtml: optional('designs/index.html'),
 };
 
+// The exceptions of docs/spec/04-design-system.md, by rule id.
+const SKIP = { 'DS-8': 'DSV-5 adds the desktop breakpoint 1024px; the test below runs DS-8 without it' };
+
+// The desktop breakpoint of DSV-5, and a stylesheet with the blocks of one query taken out.
+const DESKTOP = '(min-width: 1024px)';
+const withoutQuery = (css, query) => {
+  let out = css;
+  for (let at = out.indexOf(`@media ${query}`); at !== -1; at = out.indexOf(`@media ${query}`)) {
+    let depth = 0;
+    let end = out.indexOf('{', at);
+    do {
+      if (out[end] === '{') depth += 1;
+      if (out[end] === '}') depth -= 1;
+      end += 1;
+    } while (depth > 0);
+    out = out.slice(0, at) + out.slice(end);
+  }
+  return out;
+};
+
 test('the rules read the shared stylesheet and styles.css', () => {
   // LAY-4 reads the body rule of the app only when there are two sheets.
   assert.equal(files.css.length, 2);
@@ -27,13 +47,28 @@ test('the design system has rules to run', () => {
   assert.ok(RULES.length > 0);
 });
 
-for (const rule of RULES) test(rule.title, () => assert.deepEqual(rule.check(files), []));
+for (const rule of RULES) {
+  test(rule.title, { skip: SKIP[rule.id] }, () => assert.deepEqual(rule.check(files), []));
+}
+
+test('a width query uses 600px, 840px or the 1024px of DSV-5, as min-width (DS-8)', () => {
+  const ds8 = RULES.find((rule) => rule.id === 'DS-8');
+  assert.ok(read('styles.css').includes(`@media ${DESKTOP}`));
+  assert.deepEqual(ds8.check({ ...files, css: [files.css[0], withoutQuery(files.css[1], DESKTOP)] }), []);
+});
+
+test('styles.css changes the rail only from 600px (LAY-2, DSV-5)', () => {
+  const app = withoutQuery(withoutQuery(read('styles.css'), DESKTOP), '(min-width: 600px)');
+  assert.doesNotMatch(app, /\.nav-bar\s*[{,]/);
+  assert.match(read('styles.css'), /@extends nav-bar/);
+});
 
 test('the parts of the app are documented in styles.css (DSV-3)', () => {
   const names = parseCatalog({ css: read('styles.css'), sprite: files.sprite }).components.map((part) => part.name);
   for (const name of ['version-status', 'settings', 'about', 'dust', 'onboarding', 'onboarding-art']) assert.ok(names.includes(name), name);
 });
 
-test('styles.css has one version of a shared component, list-group in settings (DSV-3)', () => {
-  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['list-group']);
+test('styles.css has a version of the rail, the header, the sheet and list-group in settings (DSV-3)', () => {
+  const names = [...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name);
+  assert.deepEqual(names.sort(), ['app-header', 'list-group', 'nav-bar', 'sheet']);
 });

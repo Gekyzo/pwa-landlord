@@ -4,6 +4,7 @@ export default {
   'nav.label': 'Secciones',
   'nav.properties': 'Viviendas',
   'nav.settings': 'Ajustes',
+  'nav.local': 'Sin cuenta',
   'properties.empty': 'Aún no hay viviendas.',
   'properties.add': 'Añadir vivienda',
   'properties.new': 'Nueva vivienda',

@@ -4,6 +4,7 @@ export default {
   'nav.label': 'Sections',
   'nav.properties': 'Properties',
   'nav.settings': 'Settings',
+  'nav.local': 'No account',
   'properties.empty': 'No properties yet.',
   'properties.add': 'Add property',
   'properties.new': 'New property',

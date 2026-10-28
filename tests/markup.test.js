@@ -74,6 +74,22 @@ test('the detail has the Documents part with one input of each slot (DOC-5)', ()
   assert.match(body, /<p class="backup-note" data-i18n="settings.exportNote"><\/p>/);
 });
 
+test('the header has the add of the view, and the rail the brand, the count and the foot (NAV-3, NAV-4)', () => {
+  assert.match(body, /<header class="app-header">[\s\S]*<button id="header-add" class="button primary header-add" type="button" hidden>[\s\S]*<span id="header-add-text"><\/span><\/button>\s*<\/header>/);
+  const [nav = ''] = body.match(/<nav class="nav-bar"[\s\S]*?<\/nav>/) ?? [];
+  assert.match(nav, /^<nav class="nav-bar"[^>]*>\s*<div class="nav-brand" aria-hidden="true"><img src="\.\/icons\/icon-192\.png" alt="" width="28" height="28"><span data-i18n="app.title"><\/span><\/div>/);
+  assert.match(nav, /<span id="nav-count" class="nav-count" aria-hidden="true"><\/span>/);
+  assert.match(nav, /<p id="nav-account" class="nav-foot" data-i18n-attr="title:nav.local" hidden>/);
+});
+
+test('each group of Settings is a section: its head and its group (SET-1)', () => {
+  const [settings = ''] = body.match(/<section id="settings"[\s\S]*?<\/section>/) ?? [];
+  const heads = settings.match(/class="list-group-head"/g) ?? [];
+  const sections = settings.match(/class="settings-section"/g) ?? [];
+  assert.ok(heads.length > 0);
+  assert.equal(sections.length, heads.length);
+});
+
 test('the walkthrough has one drawing for each page, in the order of the pages', () => {
   const [layer = ''] = body.match(/<div id="onboarding"[\s\S]*?<input id="import-file"/) ?? [];
   const drawings = [...layer.matchAll(/<svg data-page="([^"]+)"/g)].map(([, page]) => page);
@@ -117,7 +133,7 @@ test('the account screens cover the app: Sign in with Google or offline, and Wai
 });
 
 test('Settings has the Account group: the email and Log out, or Sign in with Google (ACC-8)', () => {
-  const [group = ''] = body.match(/<div id="account-group" hidden>[\s\S]*?<\/div>\s*<\/div>/) ?? [];
+  const [group = ''] = body.match(/<div id="account-group" class="settings-section" hidden>[\s\S]*?<\/div>\s*<\/div>/) ?? [];
   assert.match(group, /data-i18n="settings.account"/);
   assert.match(group, /<span id="account-email" class="settings-row-label"><\/span>/);
   assert.match(group, /<div id="account-row" class="settings-row"><span id="account-email" class="settings-row-label"><\/span><\/div>/);

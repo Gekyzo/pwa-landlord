@@ -37,6 +37,8 @@ export const renderAccount = () => {
   $('account-row').hidden = !session;
   $('logout').hidden = !session;
   $('account-login').hidden = session !== null;
+  // The foot of the rail says that the data stays on this device (NAV-4).
+  $('nav-account').hidden = session !== null;
   $('account-email').textContent = session ? session.user.email || session.user.name : '';
 };
 

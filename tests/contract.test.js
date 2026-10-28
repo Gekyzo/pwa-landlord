@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { MAX_AMOUNT, TERM_YEARS, parseAmount, formatAmount, isDate, addYears, contractTerm } from '#contract';
 
 test('an empty amount is null', () => {
-  for (const text of [undefined, null, '', '   ', ' € ']) assert.deepEqual(parseAmount(text), { cents: null });
+  for (const text of [undefined, null, '', '   ', ' € ']) assert.deepEqual(parseAmount(text, 'rent'), { cents: null });
 });
 
 test('an amount is read with a comma or a point as the decimal mark', () => {
@@ -22,18 +22,18 @@ test('an amount is read with a comma or a point as the decimal mark', () => {
     '1 200': 120000,
     0: 0,
   };
-  for (const [text, cents] of Object.entries(cases)) assert.deepEqual(parseAmount(text), { cents }, text);
+  for (const [text, cents] of Object.entries(cases)) assert.deepEqual(parseAmount(text, 'rent'), { cents }, text);
 });
 
 test('an amount that is not a number is an error', () => {
   for (const text of ['abc', '-5', '8,5,5', '1.2.3', '1.20.000', '850,5555', ',5', '5,', '1e3']) {
-    assert.deepEqual(parseAmount(text), { error: { key: 'error.amountInvalid' } }, text);
+    assert.deepEqual(parseAmount(text, 'rent'), { error: { key: 'error.rentInvalid' } }, text);
   }
 });
 
 test('an amount over the maximum is an error', () => {
-  assert.deepEqual(parseAmount(String(MAX_AMOUNT / 100)), { cents: MAX_AMOUNT });
-  assert.deepEqual(parseAmount('1000000,01'), { error: { key: 'error.amountTooLarge', params: { max: 1000000 } } });
+  assert.deepEqual(parseAmount(String(MAX_AMOUNT / 100), 'rent'), { cents: MAX_AMOUNT });
+  assert.deepEqual(parseAmount('1000000,01', 'deposit'), { error: { key: 'error.depositTooLarge', params: { max: 1000000 } } });
 });
 
 test('an amount shows in euros in the language of the page', () => {

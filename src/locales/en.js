@@ -84,6 +84,11 @@ export default {
   'error.nameTooLong': 'The name has at most {max} characters.',
   'error.addressTooLong': 'The address has at most {max} characters.',
   'error.propertyMissing': 'The property no longer exists.',
-  'error.amountInvalid': 'Type an amount, such as 850 or 850.50.',
-  'error.amountTooLarge': 'The amount is at most €{max}.',
+  'error.rentInvalid': 'Type the rent as an amount, such as 850 or 850.50.',
+  'error.rentTooLarge': 'The rent is at most €{max}.',
+  'error.depositInvalid': 'Type the deposit as an amount, such as 850 or 850.50.',
+  'error.depositTooLarge': 'The deposit is at most €{max}.',
+  'error.ownerTooLong': 'The name of the owner is at most {max} characters.',
+  'error.tenantTooLong': 'The name of the tenant is at most {max} characters.',
+  'error.startInvalid': 'Pick a valid start date.',
 };

@@ -7,19 +7,19 @@ export const MAX_AMOUNT = 100_000_000;
 // Digits in groups of 3 split by one separator, or plain digits; then the decimal part.
 const AMOUNT = /^(\d{1,3}(?:([.,])\d{3})(?:\2\d{3})*|\d+)(?:[.,](\d{1,2}))?$/;
 
-// `{ cents }`, null when empty, or `{ error }`. The last `.` or `,` with 1 or 2 digits after it is
-// the decimal mark; another separator groups thousands.
-export const parseAmount = (text) => {
+// `{ cents }`, null when empty, or `{ error }` of the field (`rent`, `deposit`). The last `.` or
+// `,` with 1 or 2 digits after it is the decimal mark; another separator groups thousands.
+export const parseAmount = (text, field) => {
   const clean = String(text ?? '').replace(/[\s€]/g, '');
   if (!clean) return { cents: null };
   const match = AMOUNT.exec(clean);
-  if (!match) return { error: { key: 'error.amountInvalid' } };
+  if (!match) return { error: { key: `error.${field}Invalid` } };
   const [, whole, separator, decimals = ''] = match;
   // A group separator that is also the decimal mark, as in `1.200.50`, is read as `1200.50`;
   // one that differs, as in `1,200.50`, is the usual form.
   const units = Number(separator ? whole.split(separator).join('') : whole);
   const cents = units * 100 + Number(decimals.padEnd(2, '0'));
-  if (cents > MAX_AMOUNT) return { error: { key: 'error.amountTooLarge', params: { max: MAX_AMOUNT / 100 } } };
+  if (cents > MAX_AMOUNT) return { error: { key: `error.${field}TooLarge`, params: { max: MAX_AMOUNT / 100 } } };
   return { cents };
 };
 

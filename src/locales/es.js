@@ -84,6 +84,11 @@ export default {
   'error.nameTooLong': 'El nombre tiene como máximo {max} caracteres.',
   'error.addressTooLong': 'La dirección tiene como máximo {max} caracteres.',
   'error.propertyMissing': 'La vivienda ya no existe.',
-  'error.amountInvalid': 'Escribe un importe, como 850 o 850,50.',
-  'error.amountTooLarge': 'El importe es como máximo {max} €.',
+  'error.rentInvalid': 'Escribe la mensualidad como un importe, como 850 o 850,50.',
+  'error.rentTooLarge': 'La mensualidad es como máximo {max} €.',
+  'error.depositInvalid': 'Escribe la fianza como un importe, como 850 o 850,50.',
+  'error.depositTooLarge': 'La fianza es como máximo {max} €.',
+  'error.ownerTooLong': 'El nombre del propietario tiene como máximo {max} caracteres.',
+  'error.tenantTooLong': 'El nombre del inquilino tiene como máximo {max} caracteres.',
+  'error.startInvalid': 'Elige una fecha de inicio válida.',
 };

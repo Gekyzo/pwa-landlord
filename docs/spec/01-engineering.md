@@ -14,7 +14,7 @@
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
 | `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules` |
 | `src/install.js` | The install offer state machine | nothing |
-| `src/properties.js` | Pure property operations, the doc and its validation | `config` |
+| `src/properties.js` | Pure property operations, the doc and its validation | `config`, `contract` |
 | `src/contract.js` | The amounts in euros and the term of a contract (PROP-10, PROP-11) | nothing |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |

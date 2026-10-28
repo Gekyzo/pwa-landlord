@@ -1,4 +1,4 @@
-const CACHE = 'pwa-landlord-shell-v2';
+const CACHE = 'pwa-landlord-shell-v3';
 
 const SHELL = [
   './',

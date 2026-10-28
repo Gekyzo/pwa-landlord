@@ -7,21 +7,31 @@ the `#properties` section and the `#property-sheet` of `index.html`.
 
 ## Doc
 
-- **PROP-1** The doc is `{ version: 1, properties: [{ id, name, address }] }`, newest property
-  first, stored as JSON under `pwa-landlord.properties`. A stored doc that is not valid is kept
+- **PROP-1** The doc is `{ version: 2, properties: [{ id, name, address, owner, tenant, start,
+  rent, deposit, costs }] }`, newest property first, stored as JSON under `pwa-landlord.properties`.
+  `owner` and `tenant` are full names, `''` when empty; `start` is the day the contract starts,
+  `YYYY-MM-DD` or `''`; `rent` and `deposit` are amounts (PROP-11) or `null`; `costs` maps a cost
+  of `COSTS` (`community`, `ibi`, `water`, `power`, `gas`, `rubbish`, `internet`) to `owner` or
+  `tenant`, and a cost with no entry is not assigned. A stored doc that is not valid is kept
   under `pwa-landlord.properties.corrupt`, and the app starts with no properties. The
   `pwa-landlord.notes` key of 0.1.1 is not read.
-- **PROP-2** `normalizeProperties` accepts a doc of version 1 whose properties have a non-empty
-  id, a name that is not blank, an address that is a string or absent, and no id two times. It
-  trims each name and address, gives an absent address `''`, and drops unknown fields. A new
-  version adds its migration here.
+- **PROP-2** `normalizeProperties` accepts a doc of version 1 or 2 whose properties have a
+  non-empty id, a name that is not blank, and no id two times; in version 2 also a text or no
+  `owner` and `tenant`, a real day, `''` or no `start`, an amount, `null` or no `rent` and
+  `deposit`, and an object or no `costs`. It trims the texts, gives an absent field its empty
+  value, drops a cost that is not in `COSTS` or has another payer, and drops unknown fields. A
+  version 1 doc, also from an import, becomes version 2 with the empty values. A new version
+  adds its migration here.
 
 ## Operations
 
-- **PROP-3** `addProperty` puts a property first. The name and the address are trimmed. A blank
-  name is `error.nameRequired`, a name of more than 80 characters is `error.nameTooLong`, and an
-  address of more than 200 characters is `error.addressTooLong`. The address can be empty.
-- **PROP-4** `editProperty` changes the name and the address of one property, with the checks of
+- **PROP-3** `addProperty` puts a property first. The texts are trimmed. A blank name is
+  `error.nameRequired`, a name of more than 80 characters is `error.nameTooLong`, an address of
+  more than 200 characters is `error.addressTooLong`, an owner or a tenant of more than 120
+  characters is `error.ownerTooLong` or `error.tenantTooLong`, and a start that is not a real day
+  is `error.startInvalid`. The rent and the deposit come as texts (PROP-11). Every other field can
+  be empty.
+- **PROP-4** `editProperty` changes every field of one property but its id, with the checks of
   PROP-3.
 - **PROP-5** `deleteProperty` removes one property. The toast `toast.propertyDeleted` offers
   **Undo** for 5 seconds.
@@ -50,5 +60,6 @@ the `#properties` section and the `#property-sheet` of `index.html`.
 - **PROP-11** An amount is integer cents in euros, from 0 to 100 000 000. `parseAmount` reads a
   text: a space and `€` are ignored, the last `.` or `,` with 1 or 2 digits after it is the decimal
   mark, and another separator groups the digits by 3. An empty text is no amount. Another text is
-  `error.amountInvalid`; more than 1 000 000 € is `error.amountTooLarge`. `formatAmount` shows it
+  `error.rentInvalid` or `error.depositInvalid`; more than 1 000 000 € is `error.rentTooLarge` or
+  `error.depositTooLarge`. `formatAmount` shows it
   in euros in the language of the page.

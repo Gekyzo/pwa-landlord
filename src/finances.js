@@ -1,5 +1,5 @@
 import { addMonths, isDate } from '#contract';
-import { rentMonths } from '#balance';
+import { balanceOf, rentMonths } from '#balance';
 import { KINDS } from '#properties';
 
 // The finances of a property in a year (FIN-2 to FIN-4): the rent collected against the costs
@@ -46,4 +46,11 @@ export const financesOf = (property, year, today) => {
   const rent = sum(months.filter(({ paid }) => paid));
   const total = Object.values(costs).reduce((all, cents) => all + cents, 0);
   return { rent, unpaid: sum(months.filter(({ paid }) => !paid)), costs, total, net: rent - total };
+};
+
+// What the row of a property shows: the unpaid rent of all years and the net of this year, or null
+// with no rent month, no extra cost and no mortgage (PROP-13).
+export const glanceOf = (property, today) => {
+  if (rentMonths(property, today).length === 0 && property.expenses.length === 0 && !property.mortgage) return null;
+  return { due: balanceOf(property, today).due, net: financesOf(property, Number(today.slice(0, 4)), today).net };
 };

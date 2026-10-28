@@ -70,6 +70,8 @@ export default {
   'finances.mortgage': 'Hipoteca',
   'finances.total': 'Total de gastos',
   'finances.net': 'Neto',
+  'glance.due': 'Debe {amount}',
+  'glance.net': '{year}: {amount}',
   'properties.count': { one: '{count} vivienda', other: '{count} viviendas' },
   'toast.propertyDeleted': 'Vivienda borrada.',
   'toast.expenseDeleted': 'Gasto borrado.',

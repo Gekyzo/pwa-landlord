@@ -70,6 +70,8 @@ export default {
   'finances.mortgage': 'Mortgage',
   'finances.total': 'Total costs',
   'finances.net': 'Net',
+  'glance.due': 'Owes {amount}',
+  'glance.net': '{year}: {amount}',
   'properties.count': { one: '{count} property', other: '{count} properties' },
   'toast.propertyDeleted': 'Property deleted.',
   'toast.expenseDeleted': 'Cost deleted.',

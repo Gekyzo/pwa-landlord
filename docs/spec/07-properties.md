@@ -77,3 +77,7 @@ the `#properties` section and the `#property-sheet` of `index.html`.
   Dates show in the medium style of the language, amounts in euros (PROP-11). Below the list, one
   line names the costs that the owner pays and one the costs that the tenant pays; a line with no
   cost is hidden. The view reads today from the clock of the device, as a local day.
+- **PROP-13** Each row of the list shows, below the name, `glanceOf` (FIN-4): **Owes** and the
+  unpaid rent of every year (BAL-6) in the danger colour when it is above 0, then the year and
+  the net of the current year. A property with no rent month, no extra cost and no mortgage
+  shows no line.

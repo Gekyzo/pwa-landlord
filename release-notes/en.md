@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- The property list shows, below each name, what the tenant owes, in red, and the net of this year.
 - Each property has its finances of the year: the rent collected, the costs by kind (mortgage, levies, IBI, income tax, insurances) and the net. Note the mortgage in the property sheet and pick the kind of each cost.
 - The app has a new icon: three houses and a gold key.
 - Each property has its balance: the rent months since the contract start show in red until you mark them paid, and then they turn green. You can also note the costs that you pay, such as the rubbish tax.

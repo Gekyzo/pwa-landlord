@@ -17,7 +17,7 @@
 | `src/properties.js` | Pure property operations, the doc and its validation | `config`, `contract` |
 | `src/contract.js` | The amounts in euros and the term of a contract (PROP-10, PROP-11) | nothing |
 | `src/balance.js` | The rent months, their payment and the extra costs of a property (BAL-1 to BAL-6) | `contract`, `properties` |
-| `src/finances.js` | The mortgage months, the years and the finances of a year of a property (FIN-2 to FIN-4) | `contract`, `balance`, `properties` |
+| `src/finances.js` | The mortgage months, the years, the finances of a year and the glance of a property (FIN-2 to FIN-4, PROP-13) | `contract`, `balance`, `properties` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
@@ -28,7 +28,7 @@
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/drag`, `ui/update`, `ui/dust` |
-| `src/ui/properties.js` | The Properties section, its rows, its summary and its sheet | `ds/sheet`, `properties`, `contract`, `i18n`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
+| `src/ui/properties.js` | The Properties section, its rows and their glance (PROP-13), its summary and its sheet | `ds/sheet`, `properties`, `contract`, `finances`, `i18n`, `swipe`, `ui/context`, `ui/controls`, `ui/drag` |
 | `src/ui/finances.js` | The Finances part of the detail of a property (FIN-5, FIN-6) | `finances`, `contract`, `properties`, `i18n`, `ui/context` |
 | `src/ui/balance.js` | The Balance part of the detail of a property and the sheet of an extra cost (BAL-7, BAL-8) | `balance`, `contract`, `properties`, `i18n`, `ds/sheet`, `ui/context`, `ui/controls` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |

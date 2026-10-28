@@ -165,11 +165,17 @@
      @part property-facts    The list of the filled facts of the contract.
      @part property-fact     One fact: its name in second text, its value at the end.
      @part property-costs    A line of the costs that one side pays.
+     @part property-glance   The line below the name of a row of the list: the unpaid rent and the net of this year.
+     @part property-glance-due The unpaid rent in the glance line, in --danger.
      @example <article class="pane-detail"><h2 class="property-name">Flat 2B</h2><p class="property-address">Main Street 4, Madrid</p><dl class="property-facts"><div class="property-fact"><dt>Tenant</dt><dd>Luis Gil</dd></div><div class="property-fact"><dt>Monthly rent</dt><dd>€850.00</dd></div></dl><p class="property-costs">Paid by the owner: IBI and community fees.</p></article> */
   .property-name {
     margin: 0 0 var(--space-2);
     font-size: var(--text-h);
     font-weight: 600;
+  }
+
+  .property-glance-due {
+    color: var(--danger);
   }
 
   .property-address {

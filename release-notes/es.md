@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- La lista de viviendas muestra debajo de cada nombre lo que debe el inquilino, en rojo, y el neto de este año.
 - Cada vivienda tiene sus finanzas del año: el alquiler cobrado, los gastos por tipo (hipoteca, derramas, IBI, IRPF, seguros) y el neto. Apunta la hipoteca en la ficha de la vivienda y elige el tipo de cada gasto.
 - La app tiene un icono nuevo: tres casas y una llave dorada.
 - Cada vivienda tiene su saldo: las mensualidades desde el inicio del contrato salen en rojo hasta que las marcas como pagadas, y entonces pasan a verde. También puedes apuntar los gastos que pagas tú, como la tasa de basuras.

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mortgageMonths, yearsOf, financesOf } from '#finances';
+import { mortgageMonths, yearsOf, financesOf, glanceOf } from '#finances';
 
 const today = '2026-04-10';
 const p = {
@@ -60,4 +60,11 @@ test('a year with no data is all zero', () => {
     total: 0,
     net: 0,
   });
+});
+
+test('the glance of a property is its unpaid rent and the net of this year, or null with no data', () => {
+  // Unpaid over all years: November 2025, February and March 2026.
+  assert.deepEqual(glanceOf(p, today), { due: 240000, net: -50000 });
+  assert.equal(glanceOf(empty, today), null);
+  assert.deepEqual(glanceOf({ ...empty, expenses: [{ ...p.expenses[0], date: '2025-03-01' }] }, today), { due: 0, net: 0 });
 });

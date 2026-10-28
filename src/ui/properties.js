@@ -1,4 +1,5 @@
 import { COSTS, PAYERS, addProperty, editProperty, deleteProperty, findProperty } from '#properties';
+import { glanceOf } from '#finances';
 import { TERM_YEARS, amountText, contractTerm, formatAmount, formatDay, localDay } from '#contract';
 import { intlTag } from '#i18n';
 import { bindSheetDrag } from '#ds/sheet';
@@ -94,6 +95,19 @@ const bindSwipe = (row, width, id) => {
   row.addEventListener('pointercancel', finish);
 };
 
+// The unpaid rent, in the danger colour, and the net of this year below the name (PROP-13).
+const glanceLine = (property) => {
+  const today = localDay(new Date());
+  const glance = glanceOf(property, today);
+  if (!glance) return [];
+  const tag = intlTag(lang);
+  const net = t('glance.net', { year: today.slice(0, 4), amount: formatAmount(glance.net, tag) });
+  const parts = glance.due
+    ? [el('span', { className: 'property-glance-due', textContent: t('glance.due', { amount: formatAmount(glance.due, tag) }) }), ` · ${net}`]
+    : [net];
+  return [el('small', { className: 'item-row-meta property-glance' }, parts)];
+};
+
 // A row slides left to show Delete (swipe), and a hold lifts it to a new place (drag).
 const row = (property) => {
   const open = ui.openId === property.id;
@@ -103,6 +117,7 @@ const row = (property) => {
   const width = actions.length * SIDE_BUTTON;
   const name = el('button', { className: 'item-row-name', type: 'button', tabIndex: -1, onclick: () => openProperty(property.id) }, [
     el('span', { textContent: property.name }),
+    ...glanceLine(property),
   ]);
   const body = el('div', { className: 'item-row-body' }, [name]);
   const from = ui.settleFrom?.id === property.id ? ui.settleFrom.x : null;

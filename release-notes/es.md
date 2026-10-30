@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-- **Borrar todos los datos** en Ajustes borra las viviendas y las preferencias de este dispositivo, y la app empieza como nueva.
+- **Borrar todos los datos** en Ajustes borra las viviendas, sus archivos y las preferencias de este dispositivo, y la app empieza como nueva.
 
 ## 0.2.2 - 2026-10-28
 

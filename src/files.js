@@ -34,6 +34,7 @@ export const openFiles = async (indexedDB) => {
     get: (id) => run('readonly', (store) => store.get(id)).then((row) => row?.blob ?? null),
     remove: (id) => run('readwrite', (store) => store.delete(id)).then(() => undefined),
     keys: () => run('readonly', (store) => store.getAllKeys()),
+    clear: () => run('readwrite', (store) => store.clear()).then(() => undefined),
   };
 };
 

@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-- **Delete all data** in Settings removes the properties and the preferences from this device, and the app starts as new.
+- **Delete all data** in Settings removes the properties, their files and the preferences from this device, and the app starts as new.
 
 ## 0.2.2 - 2026-10-28
 

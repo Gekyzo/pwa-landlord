@@ -52,9 +52,10 @@ this app the Properties section uses the `pane` layout (LAY-3). From 840px, with
   the session closes. A yes removes each `localStorage` key of the app, `<slug>.*` (`resetAll`),
   the trash of the files (`pwa-landlord.file-trash`, DOC-4) included, and no key of another app of
   the origin, then loads the page again: the app starts as a new install, with the walkthrough
-  (ONB-1), and a device that had a session opens Sign in (ACC-1). It has no Undo. When the removal
-  fails, `error.resetFailed` shows and nothing else changes. The caches of the worker and the
-  blobs of the files in IndexedDB (DOC-4) stay.
+  (ONB-1), and a device that had a session opens Sign in (ACC-1). Before the keys, it empties the
+  store of the blobs of the files (`clear`, DOC-4), so the files go too; the question says that the
+  backup does not keep them (DOC-7). It has no Undo. When a removal fails, `error.resetFailed`
+  shows and the keys stay. The caches of the worker stay.
 
 ## Walkthrough
 

@@ -29,7 +29,7 @@ cost, kept on the device. Its files are `src/documents.js`, `src/files.js`,
   there is `error.propertyMissing` for each operation. `fileIds` gives the id of every file and
   receipt of the doc.
 - **DOC-4** The blobs are in the IndexedDB database `pwa-landlord`, version 1, store `files`, as
-  `{ id, blob }`. `openFiles` gives `put`, `get`, `remove` and `keys`, or null with no IndexedDB
+  `{ id, blob }`. `openFiles` gives `put`, `get`, `remove`, `keys` and `clear` (SET-2), or null with no IndexedDB
   or a refused open; a write waits for the end of its transaction, so a refused write (quota) is
   an error. `discard` removes the blobs of some ids and gives the count.
 - **DOC-8** A change that drops a file (`droppedIds`: a delete or a replace, of a file, a cost or a

@@ -23,6 +23,7 @@ import {
   setTheme,
   setModules,
   setNavMotion,
+  files,
 } from '#ui/context';
 import { runUpdate } from '#ui/update';
 import { renderOnboarding } from '#ui/onboarding';
@@ -85,10 +86,11 @@ export const bind = () => {
   $('import').addEventListener('click', () => $('import-file').click());
   // SET-2: the app starts again as a new install, with the walkthrough. With no storage the data is
   // only in memory, so the reload alone clears it. The session key goes too, so a signed-in device
-  // opens Sign in.
-  $('reset').addEventListener('click', () => {
+  // opens Sign in. The blobs go first: when they cannot go, the keys that name them stay.
+  $('reset').addEventListener('click', async () => {
     if (!window.confirm(t(signedIn() ? 'reset.confirmLocal' : 'reset.confirm'))) return;
-    if (storage && !resetAll(storage)) {
+    const cleared = await (files?.clear() ?? Promise.resolve()).then(() => true, () => false);
+    if (!cleared || (storage && !resetAll(storage))) {
       showToast(t('error.resetFailed'));
       return;
     }

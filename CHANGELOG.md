@@ -4,6 +4,10 @@ User-visible changes, newest first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.3 - 2026-10-31
+
 - Bold text in **What's new** (VER-22): `textParts` of `src/onboarding.js` also reads a text between two `**` as a part with `strong: true`, a key in it too; a `**` with no pair, or one in a key, stays as text. `src/ui/whatsnew.js` shows such a part in a `<strong>`. Until now the notes showed the `**` marks.
 - **Delete all data** in Settings › Backup, as in pwa-template (SET-2): `resetAll` in `src/storage.js` removes each `localStorage` key of the app, `<slug>.*` (the file trash too), and no key of another app of the origin; the page loads again as a new install. With a session the question says that it also logs out (`signedIn` of `src/ui/account.js`). Before the keys it empties the IndexedDB store of the file blobs (`clear` of `src/files.js`, DOC-4), and the question says that the backup does not keep the files. Keys `settings.reset`, `reset.confirm`, `reset.confirmLocal`, `error.resetFailed`.
 

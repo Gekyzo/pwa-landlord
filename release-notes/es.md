@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.2.3 - 2026-10-31
+
 - En Novedades los nombres de los botones se ven en negrita, no entre asteriscos.
 - **Borrar todos los datos** en Ajustes borra las viviendas, sus archivos y las preferencias de este dispositivo, y la app empieza como nueva.
 

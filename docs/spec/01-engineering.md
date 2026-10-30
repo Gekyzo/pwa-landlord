@@ -34,7 +34,7 @@
 | `src/ui/documents.js` | The Documents part of the detail of a property, and the pick, save and open of a file (DOC-5 to DOC-7) | `documents`, `properties`, `contract`, `i18n`, `ui/context`, `ui/controls` |
 | `src/ui/finances.js` | The Finances part of the detail of a property (FIN-5, FIN-6) | `finances`, `contract`, `properties`, `i18n`, `ui/context` |
 | `src/ui/balance.js` | The Balance part of the detail of a property and the sheet of an extra cost with its receipt (BAL-7, BAL-8, DOC-7) | `balance`, `contract`, `documents`, `properties`, `i18n`, `ds/sheet`, `ui/context`, `ui/controls`, `ui/documents` |
-| `src/ui/settings.js` | Settings, and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
+| `src/ui/settings.js` | Settings, Delete all data (SET-2), and the text of the page in its language | `properties`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/drag.js` | The hold and move of a row (optional) | `properties`, `reorder`, `ui/context`, `ui/motion` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |

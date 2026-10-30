@@ -27,6 +27,7 @@ import {
   ONBOARDED_KEY, SEEN_VERSION_KEY, loadSeen, saveSeen,
   loadOnboarded,
   saveOnboarded,
+  resetAll,
 } from '#storage';
 
 const fakeStorage = (initial = {}) => {
@@ -35,6 +36,10 @@ const fakeStorage = (initial = {}) => {
     getItem: (key) => (data.has(key) ? data.get(key) : null),
     setItem: (key, value) => data.set(key, String(value)),
     removeItem: (key) => data.delete(key),
+    key: (index) => [...data.keys()][index] ?? null,
+    get length() {
+      return data.size;
+    },
   };
 };
 
@@ -280,4 +285,24 @@ test('saveTrash stores the ids and their times, and is false for a storage that 
   assert.equal(saveTrash(storage, { a: 5 }), true);
   assert.deepEqual(loadTrash(storage), { a: 5 });
   assert.equal(saveTrash(brokenStorage(), { a: 5 }), false);
+});
+
+test('resetAll removes every key of the app, the corrupt copies and the trash too, and keeps the keys of other apps (SET-2)', () => {
+  const storage = fakeStorage({
+    [keyOf('properties')]: '{}',
+    [`${keyOf('properties')}.corrupt`]: 'x',
+    [keyOf('lang')]: 'es',
+    [keyOf('file-trash')]: '{}',
+    [keyOf('session')]: '{}',
+    [keyOf('offline')]: '1',
+    'other.properties': 'kept',
+    [`${APP_SLUG}x.lang`]: 'kept',
+  });
+  assert.equal(resetAll(storage), true);
+  assert.deepEqual([...Array(storage.length).keys()].map((index) => storage.key(index)).sort(), ['other.properties', `${APP_SLUG}x.lang`]);
+});
+
+test('resetAll reports a storage that refuses the removal (SET-2)', () => {
+  const storage = { length: 1, key: () => keyOf('lang'), removeItem: () => { throw new Error('denied'); } };
+  assert.equal(resetAll(storage), false);
 });
